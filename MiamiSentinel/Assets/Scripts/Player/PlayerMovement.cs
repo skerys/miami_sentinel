@@ -28,8 +28,6 @@ public class PlayerMovement : MonoBehaviour
         targetVelocity = Vector3.ClampMagnitude(targetVelocity, 1.0f);
 
         targetVelocity *= maxSpeed;
-
-        //Debug.Log($"Current velocity: {body.velocity}; Target velocity: {targetVelocity}");
     }
 
     void FixedUpdate()
@@ -37,11 +35,9 @@ public class PlayerMovement : MonoBehaviour
         velocity = body.velocity;
 
         float maxSpeedChange = maxAcceleration * Time.deltaTime;
-        //Debug.Log("max speed change: " + maxSpeedChange);
 
         velocity.x = Mathf.MoveTowards(body.velocity.x, targetVelocity.x, maxSpeedChange);
         velocity.z = Mathf.MoveTowards(body.velocity.z, targetVelocity.z, maxSpeedChange);
-        Debug.Log(velocity);
         body.velocity = velocity;
     }
 }
