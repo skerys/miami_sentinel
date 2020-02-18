@@ -1,13 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerInput : MonoBehaviour
 {
+    [SerializeField]
+    private KeyCode attackKey;
+
     public float Horizontal { get; private set; }
     public float Vertical { get; private set; }
 
     public Vector3 MouseScreenPosition { get; private set; }
+
+    public event Action OnAttack = delegate { };
 
     void Update()
     {
@@ -15,5 +21,10 @@ public class PlayerInput : MonoBehaviour
         Vertical = Input.GetAxis("Vertical");
 
         MouseScreenPosition = Input.mousePosition;
+
+        if (Input.GetKeyDown(attackKey))
+        {
+            OnAttack();
+        }
     }
 }
