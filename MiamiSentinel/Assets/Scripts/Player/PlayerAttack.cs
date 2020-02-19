@@ -51,7 +51,7 @@ public class PlayerAttack : MonoBehaviour
             if(cooldownTimer >= attackCooldown)
             {
                 canAttack = true;
-                cooldownTimer -= 0.0f;
+                cooldownTimer = 0.0f;
             }
         }
     }
@@ -68,6 +68,11 @@ public class PlayerAttack : MonoBehaviour
                 if(Vector3.Dot(vectorToCollider, transform.forward) > minDotProduct)
                 {
                     Debug.Log($"Hit collider {hitColliders[i].gameObject.name} with a weak attack");
+                    var health = hitColliders[i].GetComponent<HealthSystem>();
+                    if (health)
+                    {
+                        health.Damage(1);
+                    }
                 }
             }
             canAttack = false;
@@ -82,6 +87,11 @@ public class PlayerAttack : MonoBehaviour
             for(int i = 0; i < rangedHitCount; ++i)
             {
                 Debug.Log($"Hit collider {rangedHits[i].collider.gameObject.name} with a ranged attach");
+                var health = rangedHits[i].collider.GetComponent<HealthSystem>();
+                if (health)
+                {
+                    health.Kill();
+                }
             }
             shotsLeft--;
         }
