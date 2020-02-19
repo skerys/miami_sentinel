@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : MonoBehaviour, IMovementInput
 {
     [SerializeField]
     private KeyCode attackKey;

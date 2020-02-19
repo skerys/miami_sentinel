@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(0f, 100f)]
     private float maxAcceleration = 5f;
 
-    private PlayerInput input;
+    private IMovementInput input;
     private Rigidbody body;
 
     private Vector3 velocity;
