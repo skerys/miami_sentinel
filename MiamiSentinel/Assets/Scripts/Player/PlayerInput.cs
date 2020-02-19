@@ -8,6 +8,8 @@ public class PlayerInput : MonoBehaviour
     [SerializeField]
     private KeyCode attackKey;
     [SerializeField]
+    private KeyCode reloadKey;
+    [SerializeField]
     private Camera mainCam;
     [SerializeField]
     private LayerMask mouseCollisionLayerMask;
@@ -19,6 +21,8 @@ public class PlayerInput : MonoBehaviour
 
     public event Action OnMeleeAttack = delegate { };
     public event Action OnRangedAttack = delegate { };
+    public event Action OnReload = delegate { };
+    public event Action OnReleaseReload = delegate { };
 
     void Update()
     {
@@ -34,7 +38,7 @@ public class PlayerInput : MonoBehaviour
             Debug.DrawRay(transform.position, LookAtPos - transform.position);
         }
 
-        if (Input.GetKeyDown(attackKey))
+        if (Input.GetKey(attackKey))
         {
             OnMeleeAttack();
         }
@@ -42,6 +46,15 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             OnRangedAttack();
+        }
+
+        if (Input.GetKey(reloadKey))
+        {
+            OnReload();
+        }
+        if (Input.GetKeyUp(reloadKey))
+        {
+            OnReleaseReload();
         }
     }
 }

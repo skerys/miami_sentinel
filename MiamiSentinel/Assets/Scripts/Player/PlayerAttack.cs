@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+    [Header("Melee Attack")]
     [SerializeField]
     private float attackCooldown = 3f;
     [SerializeField]
@@ -11,16 +12,24 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField]
     private float attackAngle = 90f;
     [SerializeField]
-    private LayerMask enemyLayerMask;
+    private LayerMask enemyLayerMask = default;
+
+    [Header("Ranged Attack")]
+    [SerializeField]
+    private float timeToReload = 0.5f;
 
     private float cooldownTimer = 0.0f;
     private bool canAttack = true;
+
+    private float reloadTimer = 0.0f;
 
     private PlayerInput input;
 
     private float minDotProduct;
     private Collider[] hitColliders = new Collider[20];
     private RaycastHit[] rangedHits = new RaycastHit[20];
+
+    private int shotsLeft = 6;
 
     void Awake()
     {
@@ -42,7 +51,7 @@ public class PlayerAttack : MonoBehaviour
             if(cooldownTimer >= attackCooldown)
             {
                 canAttack = true;
-                cooldownTimer = 0.0f;
+                cooldownTimer -= 0.0f;
             }
         }
     }
@@ -67,22 +76,51 @@ public class PlayerAttack : MonoBehaviour
 
     void DoRangedAttack()
     {
-        int rangedHitCount = Physics.RaycastNonAlloc(transform.position, input.LookAtPos - transform.position, rangedHits, Mathf.Infinity, enemyLayerMask);
-        for(int i = 0; i < rangedHitCount; ++i)
+        if (shotsLeft > 0)
         {
-            Debug.Log($"Hit collider {rangedHits[i].collider.gameObject.name} with a ranged attach");
+            int rangedHitCount = Physics.RaycastNonAlloc(transform.position, input.LookAtPos - transform.position, rangedHits, Mathf.Infinity, enemyLayerMask);
+            for(int i = 0; i < rangedHitCount; ++i)
+            {
+                Debug.Log($"Hit collider {rangedHits[i].collider.gameObject.name} with a ranged attach");
+            }
+            shotsLeft--;
         }
     }
+
+    void ReloadUpdate()
+    {
+        if (shotsLeft == 6) return;
+
+        if (reloadTimer >= timeToReload)
+        {
+            shotsLeft++;
+            reloadTimer = 0.0f;
+        }
+        else
+        {
+            reloadTimer += Time.deltaTime;
+        }
+    }
+
+    void ReloadEnd()
+    {
+        reloadTimer = 0.0f;
+    }
+
     void OnEnable()
     {
         input.OnMeleeAttack += DoWeakAttack;
         input.OnRangedAttack += DoRangedAttack;
+        input.OnReload += ReloadUpdate;
+        input.OnReleaseReload += ReloadEnd;
     }
       
     void OnDisable()
     {
         input.OnMeleeAttack -= DoWeakAttack;
         input.OnRangedAttack -= DoRangedAttack;
+        input.OnReload -= ReloadUpdate;
+        input.OnReleaseReload -= ReloadEnd;
     }
 
     void OnDrawGizmos()
