@@ -123,6 +123,10 @@ public class PlayerAttack : MonoBehaviour
         input.OnReleaseReload -= ReloadEnd;
     }
 
+    public int GetBulletCount() { return shotsLeft; }
+    public float GetReloadProgress() { return reloadTimer; }
+    public float GetReloadTime() { return timeToReload; }
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
