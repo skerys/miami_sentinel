@@ -66,7 +66,7 @@ public class PlayerAttack : MonoBehaviour
 
     void DoRangedAttack()
     {
-
+        
     }
     void OnEnable()
     {
