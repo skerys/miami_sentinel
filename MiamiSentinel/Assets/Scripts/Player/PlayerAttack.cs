@@ -5,20 +5,26 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField]
+    private float attackCooldown = 3f;
+    [SerializeField]
     private float attackRadius = 1f;
     [SerializeField]
     private float attackAngle = 90f;
     [SerializeField]
     private LayerMask enemyLayerMask;
 
+    private float cooldownTimer = 0.0f;
+    private bool canAttack = true;
+
     private PlayerInput input;
+
     private float minDotProduct;
     private Collider[] hitColliders = new Collider[10];
 
     void Awake()
     {
         input = GetComponent<PlayerInput>();
-        minDotProduct = Mathf.Cos(attackAngle * Mathf.Deg2Rad / 2);
+        OnValidate();
     }
    
     void OnValidate()
@@ -26,28 +32,52 @@ public class PlayerAttack : MonoBehaviour
         minDotProduct = Mathf.Cos(attackAngle * Mathf.Deg2Rad / 2);
     }
 
-    void OnEnable()
+
+    void Update()
     {
-        input.OnAttack += DoWeakAttack;
-    }
-      
-    void OnDisable()
-    {
-        input.OnAttack -= DoWeakAttack;
+        if (!canAttack)
+        {
+            cooldownTimer += Time.deltaTime;
+            if(cooldownTimer >= attackCooldown)
+            {
+                canAttack = true;
+                cooldownTimer = 0.0f;
+            }
+        }
     }
 
     void DoWeakAttack()
     {
-        int hitCount = Physics.OverlapSphereNonAlloc(transform.position, attackRadius, hitColliders, enemyLayerMask);
-        for(int i = 0; i < hitCount; ++i)
+        if(canAttack)
         {
-            Vector3 vectorToCollider = (hitColliders[i].transform.position - transform.position).normalized;
-
-            if(Vector3.Dot(vectorToCollider, transform.forward) > minDotProduct)
+            int hitCount = Physics.OverlapSphereNonAlloc(transform.position, attackRadius, hitColliders, enemyLayerMask);
+            for(int i = 0; i < hitCount; ++i)
             {
-                Debug.Log($"Hit collider {hitColliders[i].gameObject.name} with a weak attack");
+                Vector3 vectorToCollider = (hitColliders[i].transform.position - transform.position).normalized;
+
+                if(Vector3.Dot(vectorToCollider, transform.forward) > minDotProduct)
+                {
+                    Debug.Log($"Hit collider {hitColliders[i].gameObject.name} with a weak attack");
+                }
             }
+            canAttack = false;
         }
+    }
+
+    void DoRangedAttack()
+    {
+
+    }
+    void OnEnable()
+    {
+        input.OnMeleeAttack += DoWeakAttack;
+        input.OnRangedAttack += DoRangedAttack;
+    }
+      
+    void OnDisable()
+    {
+        input.OnMeleeAttack -= DoWeakAttack;
+        input.OnRangedAttack -= DoRangedAttack;
     }
 
     void OnDrawGizmos()

@@ -13,7 +13,8 @@ public class PlayerInput : MonoBehaviour
 
     public Vector3 MouseScreenPosition { get; private set; }
 
-    public event Action OnAttack = delegate { };
+    public event Action OnMeleeAttack = delegate { };
+    public event Action OnRangedAttack = delegate { };
 
     void Update()
     {
@@ -24,7 +25,7 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(attackKey))
         {
-            OnAttack();
+            OnMeleeAttack();
         }
     }
 }
