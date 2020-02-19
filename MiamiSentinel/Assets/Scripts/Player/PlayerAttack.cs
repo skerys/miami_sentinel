@@ -19,7 +19,8 @@ public class PlayerAttack : MonoBehaviour
     private PlayerInput input;
 
     private float minDotProduct;
-    private Collider[] hitColliders = new Collider[10];
+    private Collider[] hitColliders = new Collider[20];
+    private RaycastHit[] rangedHits = new RaycastHit[20];
 
     void Awake()
     {
@@ -66,7 +67,11 @@ public class PlayerAttack : MonoBehaviour
 
     void DoRangedAttack()
     {
-        
+        int rangedHitCount = Physics.RaycastNonAlloc(transform.position, input.LookAtPos - transform.position, rangedHits, Mathf.Infinity, enemyLayerMask);
+        for(int i = 0; i < rangedHitCount; ++i)
+        {
+            Debug.Log($"Hit collider {rangedHits[i].collider.gameObject.name} with a ranged attach");
+        }
     }
     void OnEnable()
     {

@@ -38,5 +38,10 @@ public class PlayerInput : MonoBehaviour
         {
             OnMeleeAttack();
         }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            OnRangedAttack();
+        }
     }
 }
