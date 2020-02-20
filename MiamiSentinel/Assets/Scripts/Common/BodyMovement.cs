@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class BodyMovement : MonoBehaviour
 {
     [SerializeField, Range(0f, 20f)]
     private float maxSpeed = 5f;
