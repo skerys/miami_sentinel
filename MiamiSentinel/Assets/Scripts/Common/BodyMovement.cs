@@ -40,4 +40,9 @@ public class BodyMovement : MonoBehaviour
         velocity.z = Mathf.MoveTowards(body.velocity.z, targetVelocity.z, maxSpeedChange);
         body.velocity = velocity;
     }
+
+    public void ModifySpeed(float multiplier)
+    {
+        maxSpeed *= multiplier;
+    }
 }

@@ -17,13 +17,17 @@ public class PlayerAttack : MonoBehaviour
     [Header("Ranged Attack")]
     [SerializeField]
     private float timeToReload = 0.5f;
+    [SerializeField, Range(0.0f, 1.0f)]
+    private float speedModifierOnReload = 0.5f;
 
     private float cooldownTimer = 0.0f;
     private bool canAttack = true;
 
     private float reloadTimer = 0.0f;
+    private bool alreadyReloading = false;
 
     private PlayerInput input;
+    private BodyMovement bodyMovement;
 
     private float minDotProduct;
     private Collider[] hitColliders = new Collider[20];
@@ -34,6 +38,7 @@ public class PlayerAttack : MonoBehaviour
     void Awake()
     {
         input = GetComponent<PlayerInput>();
+        bodyMovement = GetComponent<BodyMovement>();
         OnValidate();
     }
    
@@ -108,6 +113,12 @@ public class PlayerAttack : MonoBehaviour
         }
         else
         {
+            //Currently reloading
+            if (!alreadyReloading)
+            {
+                bodyMovement.ModifySpeed(speedModifierOnReload);
+                alreadyReloading = true;
+            }
             reloadTimer += Time.deltaTime;
         }
     }
@@ -115,6 +126,8 @@ public class PlayerAttack : MonoBehaviour
     void ReloadEnd()
     {
         reloadTimer = 0.0f;
+        alreadyReloading = false;
+        bodyMovement.ModifySpeed(1.0f / speedModifierOnReload);
     }
 
     void OnEnable()
