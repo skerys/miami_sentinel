@@ -102,7 +102,7 @@ public class PlayerAttack : MonoBehaviour
             }
 
             RaycastHit trailHit;
-            if (Physics.Raycast(transform.position, input.LookAtPos - transform.position, out trailHit, 30f))
+            if (Physics.Raycast(transform.position, input.LookAtPos - transform.position, out trailHit, Mathf.Infinity))
             {
                 var bulletTrail = Instantiate(bulletTrailPrefab);
                 bulletTrail.SetPositions(transform.position, trailHit.point);
