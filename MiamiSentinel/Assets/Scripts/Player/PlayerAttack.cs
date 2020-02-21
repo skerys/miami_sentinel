@@ -19,6 +19,8 @@ public class PlayerAttack : MonoBehaviour
     private float timeToReload = 0.5f;
     [SerializeField, Range(0.0f, 1.0f)]
     private float speedModifierOnReload = 0.5f;
+    [SerializeField]
+    private BulletTrail bulletTrailPrefab = default;
 
     private float cooldownTimer = 0.0f;
     private bool canAttack = true;
@@ -97,6 +99,18 @@ public class PlayerAttack : MonoBehaviour
                 {
                     health.Kill();
                 }
+            }
+
+            RaycastHit trailHit;
+            if (Physics.Raycast(transform.position, input.LookAtPos - transform.position, out trailHit, 30f))
+            {
+                var bulletTrail = Instantiate(bulletTrailPrefab);
+                bulletTrail.SetPositions(transform.position, trailHit.point);
+            }
+            else
+            {
+                var bulletTrail = Instantiate(bulletTrailPrefab);
+                bulletTrail.SetPositions(transform.position, 30f * (input.LookAtPos - transform.position));
             }
             shotsLeft--;
         }
