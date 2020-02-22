@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +26,10 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
 
     private bool isActive = true;
 
+    public event Action OnAttack = delegate { };
+
+    private float attackRange;
+
     void Awake()
     {
         Horizontal = 0.0f;
@@ -39,6 +44,7 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
             {
                 FollowPlayer();
                 if(enableLocalAvoidance) LocalAvoidance();
+                CheckForAttack();
             }
             else
             {
@@ -91,6 +97,15 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
         Vertical = directionToPlayer.z;
     }
 
+    void CheckForAttack()
+    {
+        Vector3 vectorToPlayer = targetTransform.transform.position - transform.position;
+        if(vectorToPlayer.magnitude <= attackRange)
+        {
+            OnAttack();
+        }
+    }
+
     public void EnableAI()
     {
         isActive = true;
@@ -99,5 +114,10 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
     public void DisableAI()
     {
         isActive = false;
+    }
+
+    public void SetAttackRange(float range)
+    {
+        attackRange = range;
     }
 }

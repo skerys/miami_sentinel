@@ -42,8 +42,11 @@ public class HealthSystem : MonoBehaviour
 
     public void Stun(float duration)
     {
-        enemyAI.DisableAI();
-        stunTimer = duration;
+        if(canBeStunned)
+        {
+            enemyAI.DisableAI();
+            stunTimer = duration;
+        }
     }
 
     void Update()
