@@ -190,11 +190,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &137506661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,6 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &137506662
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -548,11 +550,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &570726907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -566,6 +569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &570726908
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1160,11 +1164,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &945707901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1178,6 +1183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &945707902
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1422,11 +1428,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &977301346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1440,6 +1447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &977301347
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1884,11 +1892,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &1150089865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1902,6 +1911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &1150089866
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2045,11 +2055,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &1207401332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2063,6 +2074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &1207401333
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2498,6 +2510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!114 &1337958930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2528,11 +2541,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.5
+  localAvoidanceFactor: 0.8
 --- !u!54 &1337958932
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2618,11 +2632,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &1374550482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2636,6 +2651,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &1374550483
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2779,11 +2795,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &1547152858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2797,6 +2814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &1547152859
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2940,11 +2958,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &1625614541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2958,6 +2977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &1625614542
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3101,11 +3121,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &1768563651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3119,6 +3140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &1768563652
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3372,6 +3394,7 @@ MonoBehaviour:
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  stunDuration: 0.3
   timeToReload: 1
   speedModifierOnReload: 0.5
   bulletTrailPrefab: {fileID: 8242942511011740512, guid: 1521b06770d23cd4490ff4ed9a753a75,
@@ -4443,11 +4466,12 @@ MonoBehaviour:
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  enableLocalAvoidance: 1
   localAvoidanceSearchRange: 2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  localAvoidanceFactor: 0.3
+  localAvoidanceFactor: 0.8
 --- !u!114 &1921598719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4461,6 +4485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitsToKill: 3
+  canBeStunned: 1
 --- !u!65 &1921598720
 BoxCollider:
   m_ObjectHideFlags: 0

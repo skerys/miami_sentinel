@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyFollowerMovement : MonoBehaviour, IMovementInput
+public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
 {
     public float Horizontal { get; private set; }
     public float Vertical { get; private set; }
@@ -23,6 +23,8 @@ public class EnemyFollowerMovement : MonoBehaviour, IMovementInput
 
     private GameObject targetTransform;
 
+    private bool isActive = true;
+
     void Awake()
     {
         Horizontal = 0.0f;
@@ -31,14 +33,22 @@ public class EnemyFollowerMovement : MonoBehaviour, IMovementInput
 
     void Update()
     {
-        if (targetTransform)
+        if (isActive)
         {
-            FollowPlayer();
-            if(enableLocalAvoidance) LocalAvoidance();
+            if (targetTransform)
+            {
+                FollowPlayer();
+                if(enableLocalAvoidance) LocalAvoidance();
+            }
+            else
+            {
+                SearchForPlayer();
+            }
         }
         else
         {
-            SearchForPlayer();
+            Vertical = 0.0f;
+            Horizontal = 0.0f;
         }
     }
 
@@ -80,7 +90,14 @@ public class EnemyFollowerMovement : MonoBehaviour, IMovementInput
         Horizontal = directionToPlayer.x;
         Vertical = directionToPlayer.z;
     }
-    
 
+    public void EnableAI()
+    {
+        isActive = true;
+    }
 
+    public void DisableAI()
+    {
+        isActive = false;
+    }
 }

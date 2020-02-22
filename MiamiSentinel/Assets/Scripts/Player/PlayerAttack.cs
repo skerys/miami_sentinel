@@ -6,13 +6,15 @@ public class PlayerAttack : MonoBehaviour
 {
     [Header("Melee Attack")]
     [SerializeField]
-    private float attackCooldown = 3f;
+    private float attackCooldown = 0.5f;
     [SerializeField]
     private float attackRadius = 1f;
     [SerializeField]
     private float attackAngle = 90f;
     [SerializeField]
     private LayerMask enemyLayerMask = default;
+    [SerializeField]
+    private float stunDuration = 0.3f;
 
     [Header("Ranged Attack")]
     [SerializeField]
@@ -81,6 +83,7 @@ public class PlayerAttack : MonoBehaviour
                     if (health)
                     {
                         health.Damage(1);
+                        health.Stun(stunDuration);
                     }
                 }
             }

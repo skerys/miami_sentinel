@@ -6,8 +6,18 @@ public class HealthSystem : MonoBehaviour
 {
     [SerializeField]
     private int hitsToKill = 3;
+    [SerializeField]
+    private bool canBeStunned = true;
 
     private int currentHealth;
+
+    private IEnemyAI enemyAI;
+    private float stunTimer;
+
+    void Awake()
+    {
+        enemyAI = GetComponent<IEnemyAI>();
+    }
 
     void OnEnable()
     {
@@ -28,5 +38,24 @@ public class HealthSystem : MonoBehaviour
     {
         //Temp solution until object pooling is added
         Destroy(gameObject);
+    }
+
+    public void Stun(float duration)
+    {
+        enemyAI.DisableAI();
+        stunTimer = duration;
+    }
+
+    void Update()
+    {
+        if(stunTimer > 0.0f)
+        {
+            stunTimer -= Time.deltaTime;
+            if(stunTimer <= 0.0f)
+            {
+                enemyAI.EnableAI();
+                stunTimer = 0.0f;
+            }
+        }
     }
 }
