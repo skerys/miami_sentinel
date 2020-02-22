@@ -18,7 +18,7 @@ public class EnemyAnimation : MonoBehaviour
     {
         Vector3 moveDirection = new Vector3(input.Horizontal, 0.0f, input.Vertical);
 
-        if(moveDirection.sqrMagnitude > 0.1f)
+        if(moveDirection.sqrMagnitude > 0.0f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
 
