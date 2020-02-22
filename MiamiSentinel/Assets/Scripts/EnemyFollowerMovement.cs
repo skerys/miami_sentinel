@@ -11,6 +11,15 @@ public class EnemyFollowerMovement : MonoBehaviour, IMovementInput
     private float searchRange = 10f;
     [SerializeField]
     private LayerMask playerLayerMask = default;
+    [Header("Local Avoidance")]
+    [SerializeField]
+    private bool enableLocalAvoidance = true;
+    [SerializeField]
+    private float localAvoidanceSearchRange = 2f;
+    [SerializeField]
+    private LayerMask enemyLayerMask = default;
+    [SerializeField]
+    private float localAvoidanceFactor = 0.3f;
 
     private GameObject targetTransform;
 
@@ -25,10 +34,24 @@ public class EnemyFollowerMovement : MonoBehaviour, IMovementInput
         if (targetTransform)
         {
             FollowPlayer();
+            if(enableLocalAvoidance) LocalAvoidance();
         }
         else
         {
             SearchForPlayer();
+        }
+    }
+
+    void LocalAvoidance()
+    {
+        Collider[] foundEnemies = Physics.OverlapSphere(transform.position, localAvoidanceSearchRange, enemyLayerMask);
+        for(int i = 0; i < foundEnemies.Length; ++i)
+        {
+            Vector3 awayFromEnemy = transform.position - foundEnemies[i].transform.position;
+            awayFromEnemy = awayFromEnemy.normalized * (localAvoidanceFactor / foundEnemies.Length);
+
+            Horizontal += awayFromEnemy.x;
+            Vertical += awayFromEnemy.z;
         }
     }
 
