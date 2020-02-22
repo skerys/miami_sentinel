@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyAnimation : MonoBehaviour
 {
+    [SerializeField]
+    private float rotationSpeed = 5f;
+
     private IMovementInput input;
 
     void Awake()
@@ -14,6 +17,13 @@ public class EnemyAnimation : MonoBehaviour
     void Update()
     {
         Vector3 moveDirection = new Vector3(input.Horizontal, 0.0f, input.Vertical);
-        transform.LookAt(transform.position + moveDirection, Vector3.up);
+
+        if(moveDirection.sqrMagnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Mathf.Rad2Deg * Time.deltaTime);
+        }
+
     }
 }

@@ -116,6 +116,11 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
         isActive = false;
     }
 
+    public bool IsEnabled()
+    {
+        return isActive;
+    }
+
     public void SetAttackRange(float range)
     {
         attackRange = range;
