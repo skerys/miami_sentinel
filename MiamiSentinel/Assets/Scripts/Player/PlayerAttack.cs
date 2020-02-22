@@ -21,6 +21,8 @@ public class PlayerAttack : MonoBehaviour
     private float speedModifierOnReload = 0.5f;
     [SerializeField]
     private BulletTrail bulletTrailPrefab = default;
+    [SerializeField]
+    private ScreenShakeManager screenShake = default;
 
     private float cooldownTimer = 0.0f;
     private bool canAttack = true;
@@ -90,6 +92,7 @@ public class PlayerAttack : MonoBehaviour
     {
         if (shotsLeft > 0)
         {
+            screenShake.AddTrauma(0.2f);
             int rangedHitCount = Physics.RaycastNonAlloc(transform.position, input.LookAtPos - transform.position, rangedHits, Mathf.Infinity, enemyLayerMask);
             for(int i = 0; i < rangedHitCount; ++i)
             {
