@@ -2293,8 +2293,8 @@ GameObject:
   - component: {fileID: 1800861308}
   - component: {fileID: 1800861307}
   - component: {fileID: 1800861306}
-  m_Layer: 0
-  m_Name: Cube
+  m_Layer: 11
+  m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3650,6 +3650,11 @@ PrefabInstance:
       propertyPath: screenShake
       value: 
       objectReference: {fileID: 963194229}
+    - target: {fileID: 3785428737177540420, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
+        type: 3}
+      propertyPath: wallLayerMask.m_Bits
+      value: 2048
+      objectReference: {fileID: 0}
     - target: {fileID: 3785428737177540421, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
         type: 3}
       propertyPath: bulletCountText

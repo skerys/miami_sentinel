@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+    [SerializeField]
+    private LayerMask enemyLayerMask = default;
+
     [Header("Melee Attack")]
     [SerializeField]
     private float attackCooldown = 0.5f;
@@ -11,8 +14,6 @@ public class PlayerAttack : MonoBehaviour
     private float attackRadius = 1f;
     [SerializeField]
     private float attackAngle = 90f;
-    [SerializeField]
-    private LayerMask enemyLayerMask = default;
     [SerializeField]
     private float stunDuration = 0.3f;
 
@@ -25,6 +26,8 @@ public class PlayerAttack : MonoBehaviour
     private BulletTrail bulletTrailPrefab = default;
     [SerializeField]
     private ScreenShakeManager screenShake = default;
+    [SerializeField]
+    private LayerMask wallLayerMask = default;
 
     private float cooldownTimer = 0.0f;
     private bool canAttack = true;
@@ -108,7 +111,7 @@ public class PlayerAttack : MonoBehaviour
             }
 
             RaycastHit trailHit;
-            if (Physics.Raycast(transform.position, input.LookAtPos - transform.position, out trailHit, Mathf.Infinity))
+            if (Physics.Raycast(transform.position, input.LookAtPos - transform.position, out trailHit, Mathf.Infinity, wallLayerMask))
             {
                 var bulletTrail = Instantiate(bulletTrailPrefab);
                 bulletTrail.SetPositions(transform.position, trailHit.point);
