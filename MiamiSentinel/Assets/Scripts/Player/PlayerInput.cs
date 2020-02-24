@@ -24,37 +24,52 @@ public class PlayerInput : MonoBehaviour, IMovementInput
     public event Action OnReload = delegate { };
     public event Action OnReleaseReload = delegate { };
 
+    private bool isActive = true;
+
     void Update()
     {
-        Horizontal = Input.GetAxis("Horizontal");
-        Vertical = Input.GetAxis("Vertical");
-
-        Ray mouseRay = mainCam.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit hit;
-        if (Physics.Raycast(mouseRay, out hit, Mathf.Infinity, mouseCollisionLayerMask))
+        if(isActive)
         {
-            LookAtPos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-            Debug.DrawRay(transform.position, LookAtPos - transform.position);
-        }
+            Horizontal = Input.GetAxis("Horizontal");
+            Vertical = Input.GetAxis("Vertical");
 
-        if (Input.GetKey(attackKey))
-        {
-            OnMeleeAttack();
-        }
+            Ray mouseRay = mainCam.ScreenPointToRay(Input.mousePosition);
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            OnRangedAttack();
-        }
+            RaycastHit hit;
+            if (Physics.Raycast(mouseRay, out hit, Mathf.Infinity, mouseCollisionLayerMask))
+            {
+                LookAtPos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+                Debug.DrawRay(transform.position, LookAtPos - transform.position);
+            }
 
-        if (Input.GetKey(reloadKey))
-        {
-            OnReload();
+            if (Input.GetKey(attackKey))
+            {
+                OnMeleeAttack();
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                OnRangedAttack();
+            }
+
+            if (Input.GetKey(reloadKey))
+            {
+                OnReload();
+            }
+            if (Input.GetKeyUp(reloadKey))
+            {
+                OnReleaseReload();
+            }
         }
-        if (Input.GetKeyUp(reloadKey))
-        {
-            OnReleaseReload();
-        }
+    }
+
+    public void EnableInput()
+    {
+        isActive = true;
+    }
+
+    public void DisableInput()
+    {
+        isActive = false;
     }
 }

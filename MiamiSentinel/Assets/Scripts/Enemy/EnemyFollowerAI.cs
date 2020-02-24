@@ -109,12 +109,12 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
         }
     }
 
-    public void EnableAI()
+    public void EnableInput()
     {
         isActive = true;
     }
 
-    public void DisableAI()
+    public void DisableInput()
     {
         isActive = false;
     }

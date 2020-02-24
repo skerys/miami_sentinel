@@ -11,12 +11,12 @@ public class HealthSystem : MonoBehaviour
 
     private int currentHealth;
 
-    private IEnemyAI enemyAI;
+    private IMovementInput movementInput;
     private float stunTimer;
 
     void Awake()
     {
-        enemyAI = GetComponent<IEnemyAI>();
+        movementInput = GetComponent<IMovementInput>();
     }
 
     void OnEnable()
@@ -44,7 +44,7 @@ public class HealthSystem : MonoBehaviour
     {
         if(canBeStunned)
         {
-            enemyAI.DisableAI();
+            movementInput.DisableInput();
             stunTimer = duration;
         }
     }
@@ -56,7 +56,7 @@ public class HealthSystem : MonoBehaviour
             stunTimer -= Time.deltaTime;
             if(stunTimer <= 0.0f)
             {
-                enemyAI.EnableAI();
+                movementInput.EnableInput();
                 stunTimer = 0.0f;
             }
         }

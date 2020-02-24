@@ -5,9 +5,6 @@ using System;
 
 public interface IEnemyAI
 {
-    void EnableAI();
-    void DisableAI();
-
     bool IsEnabled();
 
     event Action OnAttack;

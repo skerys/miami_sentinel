@@ -6,4 +6,6 @@ public interface IMovementInput
 {
     float Horizontal { get; }
     float Vertical { get; }
+    void EnableInput();
+    void DisableInput();
 }

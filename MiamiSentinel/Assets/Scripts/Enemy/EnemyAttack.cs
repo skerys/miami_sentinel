@@ -22,10 +22,12 @@ public class EnemyAttack : MonoBehaviour
 
     private float minDotProduct;
     private IEnemyAI enemyAI;
+    private IMovementInput movementInput;
 
     void Awake()
     {
         enemyAI = GetComponent<IEnemyAI>();
+        movementInput = GetComponent<IMovementInput>();
         enemyAI.SetAttackRange(attackRadius);
         OnValidate();
     }
@@ -41,7 +43,7 @@ public class EnemyAttack : MonoBehaviour
         {
             prepareAttackTimer = attackTelegraphTime;
             canAttack = false;
-            enemyAI.DisableAI();
+            movementInput.DisableInput();
             Debug.Log($"{gameObject.name} is preparing to attack.");
         }
     }
@@ -55,7 +57,12 @@ public class EnemyAttack : MonoBehaviour
 
             if(Vector3.Dot(vectorToCollider, transform.forward) > minDotProduct)
             {
-                Debug.Log($"{gameObject.name} hits player ({collider.gameObject.name})");
+                var playerHealth = collider.GetComponent<HealthSystem>();
+                if (playerHealth)
+                {
+                    playerHealth.Damage(1);
+                }
+
             }
         }
     }
@@ -71,7 +78,7 @@ public class EnemyAttack : MonoBehaviour
                 {
                     ExecuteAttack();
                     cooldownTimer = attackCooldown;
-                    enemyAI.EnableAI();
+                    movementInput.EnableInput();
                 }
             }
 
