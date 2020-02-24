@@ -61,7 +61,6 @@ public class ScreenShakeManager : MonoBehaviour
             float posX = maxOffset * shakeAmount * (2.0f * Mathf.PerlinNoise((noiseRate * Time.time) + translationSeed.x, 0.5f) - 1.0f);
             float posY = maxOffset * shakeAmount * (2.0f * Mathf.PerlinNoise((noiseRate * Time.time) + translationSeed.y, 0.5f) - 1.0f);
 
-            Debug.Log(angle);
 
             camera.transform.localRotation = Quaternion.Euler(initialRot.eulerAngles.x, initialRot.eulerAngles.y, initialRot.eulerAngles.z + angle);
             camera.transform.localPosition = new Vector3(initialPos.x + posX, initialPos.y + posY, initialPos.z);

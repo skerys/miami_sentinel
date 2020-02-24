@@ -21,6 +21,8 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
     private LayerMask enemyLayerMask = default;
     [SerializeField]
     private float localAvoidanceFactor = 0.3f;
+    [SerializeField]
+    private bool divideFactorAmongsAllAvoidables = true;
 
     private GameObject targetTransform;
 
@@ -64,7 +66,8 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
         for(int i = 0; i < foundEnemies.Length; ++i)
         {
             Vector3 awayFromEnemy = transform.position - foundEnemies[i].transform.position;
-            awayFromEnemy = awayFromEnemy.normalized * (localAvoidanceFactor / foundEnemies.Length);
+            float multiplier = divideFactorAmongsAllAvoidables ? (localAvoidanceFactor / foundEnemies.Length) : localAvoidanceFactor;
+            awayFromEnemy = awayFromEnemy.normalized * multiplier;
 
             Horizontal += awayFromEnemy.x;
             Vertical += awayFromEnemy.z;

@@ -125,16 +125,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddcd8327849b5454385f00cbf9b52fd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  searchRange: 10
+  searchRange: 50
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
   enableLocalAvoidance: 1
-  localAvoidanceSearchRange: 8
+  localAvoidanceSearchRange: 10
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
   localAvoidanceFactor: 1
+  divideFactorAmongsAllAvoidables: 1
 --- !u!114 &8053808066388964822
 MonoBehaviour:
   m_ObjectHideFlags: 0
