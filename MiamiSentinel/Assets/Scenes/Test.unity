@@ -3740,6 +3740,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1408602656588432130, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
+        type: 3}
+      propertyPath: screenShake
+      value: 
+      objectReference: {fileID: 963194229}
+    - target: {fileID: 1408602656588432130, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
+        type: 3}
+      propertyPath: wallLayerMask.m_Bits
+      value: 2048
+      objectReference: {fileID: 0}
+    - target: {fileID: 1408602656588432130, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
+        type: 3}
+      propertyPath: screenShakeTraumaPerShot
+      value: 0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 3785428737177540420, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
         type: 3}
       propertyPath: screenShake

@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3785428737177540472}
   - component: {fileID: 3785428737177540475}
   - component: {fileID: 3785428737177540420}
+  - component: {fileID: 1408602656588432130}
   - component: {fileID: 3785428737177540421}
   m_Layer: 10
   m_Name: Player
@@ -173,18 +174,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344dc9909ce020e4091e479677c422fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 0.5
-  attackRadius: 3
-  attackAngle: 120
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  attackCooldown: 0.5
+  attackRadius: 3
+  attackAngle: 120
   stunDuration: 0.3
+--- !u!114 &1408602656588432130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3785428737177540467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6709dfdac47dff41a2d75fbdcf78246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
   timeToReload: 1
   speedModifierOnReload: 0.5
   bulletTrailPrefab: {fileID: 8242942511011740512, guid: 1521b06770d23cd4490ff4ed9a753a75,
     type: 3}
   screenShake: {fileID: 0}
+  wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &3785428737177540421
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,12 +9,12 @@ public class PlayerDebugUI : MonoBehaviour
     public TMP_Text bulletCountText;
     public Slider reloadSlider;
 
-    private PlayerAttack playerAttack;
+    private PlayerRangedAttack playerAttack;
     private float reloadTime;
 
     void Start()
     {
-        playerAttack = GetComponent<PlayerAttack>();
+        playerAttack = GetComponent<PlayerRangedAttack>();
         reloadTime = playerAttack.GetReloadTime();
     }
 
