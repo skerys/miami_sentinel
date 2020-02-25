@@ -17,37 +17,16 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField]
     private float stunDuration = 0.3f;
 
-    [Header("Ranged Attack")]
-    [SerializeField]
-    private float timeToReload = 0.5f;
-    [SerializeField, Range(0.0f, 1.0f)]
-    private float speedModifierOnReload = 0.5f;
-    [SerializeField]
-    private BulletTrail bulletTrailPrefab = default;
-    [SerializeField]
-    private ScreenShakeManager screenShake = default;
-    [SerializeField]
-    private LayerMask wallLayerMask = default;
-
     private float cooldownTimer = 0.0f;
     private bool canAttack = true;
 
-    private float reloadTimer = 0.0f;
-    private bool alreadyReloading = false;
-
     private PlayerInput input;
-    private BodyMovement bodyMovement;
 
     private float minDotProduct;
     private Collider[] hitColliders = new Collider[20];
-    private RaycastHit[] rangedHits = new RaycastHit[20];
-
-    private int shotsLeft = 6;
-
     void Awake()
     {
         input = GetComponent<PlayerInput>();
-        bodyMovement = GetComponent<BodyMovement>();
         OnValidate();
     }
    
@@ -72,14 +51,14 @@ public class PlayerAttack : MonoBehaviour
 
     void DoWeakAttack()
     {
-        if(canAttack)
+        if (canAttack)
         {
             int hitCount = Physics.OverlapSphereNonAlloc(transform.position, attackRadius, hitColliders, enemyLayerMask);
-            for(int i = 0; i < hitCount; ++i)
+            for (int i = 0; i < hitCount; ++i)
             {
                 Vector3 vectorToCollider = (hitColliders[i].transform.position - transform.position).normalized;
 
-                if(Vector3.Dot(vectorToCollider, transform.forward) > minDotProduct)
+                if (Vector3.Dot(vectorToCollider, transform.forward) > minDotProduct)
                 {
                     Debug.Log($"Hit collider {hitColliders[i].gameObject.name} with a weak attack");
                     var health = hitColliders[i].GetComponent<HealthSystem>();
@@ -93,86 +72,16 @@ public class PlayerAttack : MonoBehaviour
             canAttack = false;
         }
     }
-
-    void DoRangedAttack()
-    {
-        if (shotsLeft > 0)
-        {
-            screenShake.AddTrauma(0.2f);
-            int rangedHitCount = Physics.RaycastNonAlloc(transform.position, input.LookAtPos - transform.position, rangedHits, Mathf.Infinity, enemyLayerMask);
-            for(int i = 0; i < rangedHitCount; ++i)
-            {
-                Debug.Log($"Hit collider {rangedHits[i].collider.gameObject.name} with a ranged attach");
-                var health = rangedHits[i].collider.GetComponent<HealthSystem>();
-                if (health)
-                {
-                    health.Kill();
-                }
-            }
-
-            RaycastHit trailHit;
-            var bulletTrail = Instantiate(bulletTrailPrefab);
-            bulletTrail.SetTransform(transform);
-            if (Physics.Raycast(transform.position, input.LookAtPos - transform.position, out trailHit, Mathf.Infinity, wallLayerMask))
-            {
-                bulletTrail.SetPositions(transform.position, trailHit.point);
-            }
-            else
-            {
-                bulletTrail.SetPositions(transform.position, 30f * (input.LookAtPos - transform.position));
-            }
-            shotsLeft--;
-        }
-    }
-
-    void ReloadUpdate()
-    {
-        if (shotsLeft == 6) return;
-
-        if (reloadTimer >= timeToReload)
-        {
-            shotsLeft++;
-            reloadTimer = 0.0f;
-        }
-        else
-        {
-            //Currently reloading
-            if (!alreadyReloading)
-            {
-                bodyMovement.ModifySpeed(speedModifierOnReload);
-                alreadyReloading = true;
-            }
-            reloadTimer += Time.deltaTime;
-        }
-    }
-
-    void ReloadEnd()
-    {
-        reloadTimer = 0.0f;
-        alreadyReloading = false;
-        bodyMovement.ModifySpeed(1.0f / speedModifierOnReload);
-    }
-
+    
     void OnEnable()
     {
         input.OnMeleeAttack += DoWeakAttack;
-        input.OnRangedAttack += DoRangedAttack;
-        input.OnReload += ReloadUpdate;
-        input.OnReleaseReload += ReloadEnd;
     }
       
     void OnDisable()
     {
         input.OnMeleeAttack -= DoWeakAttack;
-        input.OnRangedAttack -= DoRangedAttack;
-        input.OnReload -= ReloadUpdate;
-        input.OnReleaseReload -= ReloadEnd;
     }
-
-    //
-    public int GetBulletCount() { return shotsLeft; }
-    public float GetReloadProgress() { return reloadTimer; }
-    public float GetReloadTime() { return timeToReload; }
 
     void OnDrawGizmos()
     {

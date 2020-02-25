@@ -3237,26 +3237,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 182128fd45c277345b1dc0afea3b6154, type: 3}
---- !u!1 &1824155978 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3785428737177540467, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
-    type: 3}
-  m_PrefabInstance: {fileID: 3785428735677956644}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1824155989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824155978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f82e7d6ef76b7f54e954974c946ddb6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitsToKill: 3
-  canBeStunned: 0
 --- !u!1 &1825496535
 GameObject:
   m_ObjectHideFlags: 0
@@ -3820,21 +3800,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3785428737177540420, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
+    - target: {fileID: 1408602656588432130, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
         type: 3}
       propertyPath: screenShake
       value: 
       objectReference: {fileID: 963194229}
-    - target: {fileID: 3785428737177540420, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
-        type: 3}
-      propertyPath: wallLayerMask.m_Bits
-      value: 2048
-      objectReference: {fileID: 0}
-    - target: {fileID: 3785428737177540420, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
-        type: 3}
-      propertyPath: timeToReload
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 3785428737177540421, guid: 22e6ad6241ea82a4a9a73c3fc4c2735b,
         type: 3}
       propertyPath: bulletCountText

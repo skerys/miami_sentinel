@@ -6,7 +6,7 @@ using System;
 public class PlayerInput : MonoBehaviour, IMovementInput
 {
     [SerializeField]
-    private KeyCode attackKey;
+    private KeyCode dashKey;
     [SerializeField]
     private KeyCode reloadKey;
     [SerializeField]
@@ -23,6 +23,8 @@ public class PlayerInput : MonoBehaviour, IMovementInput
     public event Action OnRangedAttack = delegate { };
     public event Action OnReload = delegate { };
     public event Action OnReleaseReload = delegate { };
+
+    public event Action OnDash = delegate { };
 
     private bool isActive = true;
 
@@ -42,12 +44,17 @@ public class PlayerInput : MonoBehaviour, IMovementInput
                 Debug.DrawRay(transform.position, LookAtPos - transform.position);
             }
 
-            if (Input.GetKey(attackKey))
+            if (Input.GetKeyDown(dashKey))
+            {
+                OnDash();
+            }
+
+            if (Input.GetMouseButton(0))
             {
                 OnMeleeAttack();
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1))
             {
                 OnRangedAttack();
             }
