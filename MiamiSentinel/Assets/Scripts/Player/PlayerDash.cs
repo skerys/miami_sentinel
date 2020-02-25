@@ -25,15 +25,18 @@ public class PlayerDash : MonoBehaviour
     private float cooldownTimer;
 
     private bool dashInProgress = false;
-    private bool canDash = true;
+    [HideInInspector]
+    public bool canDash = true;
 
     private PlayerInput input;
     private BodyMovement bodyMovement;
+    private PlayerRangedAttack rangedAttack;
 
     void Awake()
     {
         input = GetComponent<PlayerInput>();
         bodyMovement = GetComponent<BodyMovement>();
+        rangedAttack = GetComponent<PlayerRangedAttack>();
     }
 
     void StartDash()
@@ -57,6 +60,9 @@ public class PlayerDash : MonoBehaviour
 
             bodyMovement.Velocity = dashVelocity;
             bodyMovement.SetVelocityChangeActive(false);
+
+            rangedAttack.ReloadEnd();
+            rangedAttack.canReload = false;
         }
     }
 
@@ -74,6 +80,7 @@ public class PlayerDash : MonoBehaviour
         dashInProgress = false;
         bodyMovement.SetVelocityChangeActive(true);
         cooldownTimer = dashCooldown;
+        rangedAttack.canReload = true;
     }
 
     void Update()

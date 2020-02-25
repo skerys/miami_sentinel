@@ -25,14 +25,19 @@ public class PlayerRangedAttack : MonoBehaviour
 
     private PlayerInput input;
     private BodyMovement bodyMovement;
+    private PlayerDash dash;
 
     private RaycastHit[] rangedHits = new RaycastHit[20];
     private int shotsLeft = 6;
+
+    [HideInInspector]
+    public bool canReload = true;
    
     void Awake()
     {
         input = GetComponent<PlayerInput>();
         bodyMovement = GetComponent<BodyMovement>();
+        dash = GetComponent<PlayerDash>();
     }
 
     void DoRangedAttack()
@@ -52,14 +57,14 @@ public class PlayerRangedAttack : MonoBehaviour
             }
 
             RaycastHit trailHit;
+            var bulletTrail = Instantiate(bulletTrailPrefab);
+            bulletTrail.SetTransform(transform);
             if (Physics.Raycast(transform.position, input.LookAtPos - transform.position, out trailHit, Mathf.Infinity, wallLayerMask))
             {
-                var bulletTrail = Instantiate(bulletTrailPrefab);
                 bulletTrail.SetPositions(transform.position, trailHit.point);
             }
             else
             {
-                var bulletTrail = Instantiate(bulletTrailPrefab);
                 bulletTrail.SetPositions(transform.position, 30f * (input.LookAtPos - transform.position));
             }
             shotsLeft--;
@@ -68,32 +73,40 @@ public class PlayerRangedAttack : MonoBehaviour
 
     void ReloadUpdate()
     {
-        if (shotsLeft == 6) return;
+        if(canReload)
+        {
+            if (shotsLeft == 6) return;
 
-        if (reloadTimer >= timeToReload)
-        {
-            shotsLeft++;
-            reloadTimer = 0.0f;
-        }
-        else
-        {
-            //Currently reloading
-            if (!alreadyReloading)
+            if (reloadTimer >= timeToReload)
             {
-                bodyMovement.ModifySpeed(speedModifierOnReload);
-                alreadyReloading = true;
+                shotsLeft++;
+                reloadTimer = 0.0f;
             }
-            reloadTimer += Time.deltaTime;
+            else
+            {
+                //Currently reloading
+                reloadTimer += Time.deltaTime;
+                if (!alreadyReloading)
+                {
+                    //Started reloading
+                    bodyMovement.ModifySpeed(speedModifierOnReload);
+                    alreadyReloading = true;
+
+                    dash.canDash = false;
+                }
+            }
         }
     }
 
-    void ReloadEnd()
+    public void ReloadEnd()
     {
         if (shotsLeft == 6) return;
 
         reloadTimer = 0.0f;
         alreadyReloading = false;
         bodyMovement.ModifySpeed(1.0f / speedModifierOnReload);
+
+        dash.canDash = true;
     }
 
     void OnEnable()
