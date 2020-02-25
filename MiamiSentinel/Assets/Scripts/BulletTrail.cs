@@ -6,6 +6,8 @@ public class BulletTrail : MonoBehaviour
 {
     [SerializeField]
     private float lifetime;
+    [SerializeField]
+    private float testLifetime;
 
     private LineRenderer lineRenderer;
     private float currentLifeTimer;
@@ -13,12 +15,19 @@ public class BulletTrail : MonoBehaviour
     {
         currentLifeTimer = lifetime;
         lineRenderer = GetComponent<LineRenderer>();
+        Destroy(gameObject, testLifetime);
     }
 
     public void SetPositions(Vector3 startPos, Vector3 endPos)
     {
         Vector3[] positions = { startPos, endPos };
         lineRenderer.SetPositions(positions);
+    }
+
+    public void SetTransform(Transform copyTransform)
+    {
+        transform.position = copyTransform.position;
+        transform.rotation = copyTransform.rotation;
     }
 
     public void Update()
@@ -30,7 +39,7 @@ public class BulletTrail : MonoBehaviour
         if(currentLifeTimer <= 0.0f)
         {
             //Temporary (until object pooling is done)
-            Destroy(gameObject);
+            lineRenderer.enabled = false;
         }
     }
 }

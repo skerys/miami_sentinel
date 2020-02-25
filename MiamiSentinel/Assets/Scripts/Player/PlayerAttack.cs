@@ -72,7 +72,7 @@ public class PlayerAttack : MonoBehaviour
             canAttack = false;
         }
     }
-
+    
     void OnEnable()
     {
         input.OnMeleeAttack += DoWeakAttack;
