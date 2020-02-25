@@ -89,6 +89,8 @@ public class PlayerRangedAttack : MonoBehaviour
 
     void ReloadEnd()
     {
+        if (shotsLeft == 6) return;
+
         reloadTimer = 0.0f;
         alreadyReloading = false;
         bodyMovement.ModifySpeed(1.0f / speedModifierOnReload);

@@ -19,6 +19,8 @@ GameObject:
   - component: {fileID: 3785428737177540420}
   - component: {fileID: 1408602656588432130}
   - component: {fileID: 3785428737177540421}
+  - component: {fileID: 1824155989}
+  - component: {fileID: 1824155991}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -130,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87dc47454bcd2d94f8516a556162c9f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackKey: 32
+  dashKey: 32
   reloadKey: 304
   mainCam: {fileID: 0}
   mouseCollisionLayerMask:
@@ -201,9 +203,10 @@ MonoBehaviour:
   bulletTrailPrefab: {fileID: 8242942511011740512, guid: 1521b06770d23cd4490ff4ed9a753a75,
     type: 3}
   screenShake: {fileID: 0}
+  screenShakeTraumaPerShot: 0.15
   wallLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
 --- !u!114 &3785428737177540421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,6 +221,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletCountText: {fileID: 0}
   reloadSlider: {fileID: 0}
+--- !u!114 &1824155989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3785428737177540467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f82e7d6ef76b7f54e954974c946ddb6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitsToKill: 3
+  canBeStunned: 0
+--- !u!114 &1824155991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3785428737177540467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1c2b6efd522f114fa636856f12b05da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashMode: 1
+  dashTime: 0.2
+  dashSpeed: 10
+  dashCooldown: 0
 --- !u!1 &3785428737561001090
 GameObject:
   m_ObjectHideFlags: 0
