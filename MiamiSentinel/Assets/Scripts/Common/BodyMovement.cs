@@ -13,8 +13,12 @@ public class BodyMovement : MonoBehaviour
     private IMovementInput input;
     private Rigidbody body;
 
+    public Vector3 Velocity { get { return velocity; } set { velocity = value; } }
+
     private Vector3 velocity;
     private Vector3 targetVelocity;
+
+    private bool velocityChangeActive = true;
 
     void Awake()
     {
@@ -32,17 +36,26 @@ public class BodyMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        velocity = body.velocity;
+        if(velocityChangeActive)
+        {
+            velocity = body.velocity;
 
-        float maxSpeedChange = maxAcceleration * Time.deltaTime;
+            float maxSpeedChange = maxAcceleration * Time.deltaTime;
 
-        velocity.x = Mathf.MoveTowards(body.velocity.x, targetVelocity.x, maxSpeedChange);
-        velocity.z = Mathf.MoveTowards(body.velocity.z, targetVelocity.z, maxSpeedChange);
+            velocity.x = Mathf.MoveTowards(body.velocity.x, targetVelocity.x, maxSpeedChange);
+            velocity.z = Mathf.MoveTowards(body.velocity.z, targetVelocity.z, maxSpeedChange);
+        }
         body.velocity = velocity;
+    }
+
+    public void SetVelocityChangeActive(bool b)
+    {
+        velocityChangeActive = b;
     }
 
     public void ModifySpeed(float multiplier)
     {
         maxSpeed *= multiplier;
     }
+
 }
