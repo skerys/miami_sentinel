@@ -111,14 +111,14 @@ public class PlayerAttack : MonoBehaviour
             }
 
             RaycastHit trailHit;
+            var bulletTrail = Instantiate(bulletTrailPrefab);
+            bulletTrail.SetTransform(transform);
             if (Physics.Raycast(transform.position, input.LookAtPos - transform.position, out trailHit, Mathf.Infinity, wallLayerMask))
             {
-                var bulletTrail = Instantiate(bulletTrailPrefab);
                 bulletTrail.SetPositions(transform.position, trailHit.point);
             }
             else
             {
-                var bulletTrail = Instantiate(bulletTrailPrefab);
                 bulletTrail.SetPositions(transform.position, 30f * (input.LookAtPos - transform.position));
             }
             shotsLeft--;
