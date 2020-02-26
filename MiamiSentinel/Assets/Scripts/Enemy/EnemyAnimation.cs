@@ -8,6 +8,7 @@ public class EnemyAnimation : MonoBehaviour
     private float rotationSpeed = 5f;
 
     private IMovementInput input;
+    private BodyMovement body;
 
     void Awake()
     {
@@ -22,7 +23,7 @@ public class EnemyAnimation : MonoBehaviour
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
     }
