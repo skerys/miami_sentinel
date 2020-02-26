@@ -159,8 +159,11 @@ public class PlayerRangedAttack : MonoBehaviour
         if (shotsLeft == 6) return;
 
         reloadTimer = 0.0f;
+        if (alreadyReloading)
+        {
+            bodyMovement.ModifySpeed(1.0f / speedModifierOnReload);
+        }
         alreadyReloading = false;
-        bodyMovement.ModifySpeed(1.0f / speedModifierOnReload);
 
         dash.canDash = true;
     }
