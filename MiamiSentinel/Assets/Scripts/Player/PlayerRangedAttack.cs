@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerRangedAttack : MonoBehaviour
 {
     [SerializeField]
     private LayerMask enemyLayerMask = default;
+    [SerializeField]
+    private LayerMask shieldLayerMask = default;
 
     [SerializeField]
     private float timeToReload = 0.5f;
@@ -20,6 +23,9 @@ public class PlayerRangedAttack : MonoBehaviour
     [SerializeField]
     private LayerMask wallLayerMask = default;
 
+    [SerializeField]
+    private int bounceLimit = 3;
+
     private float reloadTimer = 0.0f;
     private bool alreadyReloading = false;
 
@@ -32,40 +38,90 @@ public class PlayerRangedAttack : MonoBehaviour
 
     [HideInInspector]
     public bool canReload = true;
-   
+
+    private LayerMask rayMask;
+    private bool hasBounced = false;
+    private int bounces = 0;
+
+    private RaycastHitAscendingDistanceComparer comparer;
+
+    Ray nextRay;
+
     void Awake()
     {
         input = GetComponent<PlayerInput>();
         bodyMovement = GetComponent<BodyMovement>();
         dash = GetComponent<PlayerDash>();
+
+        rayMask = enemyLayerMask | shieldLayerMask;
+        comparer = new RaycastHitAscendingDistanceComparer();
     }
 
     void DoRangedAttack()
     {
         if (shotsLeft > 0)
         {
+            List<Vector3> linePositions = new List<Vector3>();
+            linePositions.Add(transform.position);
+
+            nextRay.origin = transform.position;
+            nextRay.direction = input.LookAtPos - transform.position;
+
             screenShake.AddTrauma(screenShakeTraumaPerShot);
-            int rangedHitCount = Physics.RaycastNonAlloc(transform.position, input.LookAtPos - transform.position, rangedHits, Mathf.Infinity, enemyLayerMask);
-            for (int i = 0; i < rangedHitCount; ++i)
+            bounces = 0;
+            while(bounces < bounceLimit)
             {
-                Debug.Log($"Hit collider {rangedHits[i].collider.gameObject.name} with a ranged attach");
-                var health = rangedHits[i].collider.GetComponent<HealthSystem>();
-                if (health)
+              
+                int rangedHitCount = Physics.RaycastNonAlloc(nextRay, rangedHits, Mathf.Infinity, rayMask);
+                if(rangedHitCount == 0) { break; }
+
+                Array.Sort(rangedHits, 0, rangedHitCount, comparer);
+
+                for (int i = 0; i < rangedHitCount; ++i)
                 {
-                    health.Kill();
+                    //Debug.Log($"Shield layer mask value: {shieldLayerMask.value}\nHit collider layer value: {rangedHits[i].collider.gameObject.layer}");
+                    if (shieldLayerMask == (shieldLayerMask | (1 << rangedHits[i].collider.gameObject.layer)))
+                    {
+                        Debug.Log($"Bounce no. {bounces} happened");
+                        Vector3 newDir = Vector3.Reflect(nextRay.direction, rangedHits[i].normal);
+                        nextRay.origin = rangedHits[i].point;
+                        nextRay.direction = newDir;
+                        bounces++;
+                        hasBounced = true;
+
+                        linePositions.Add(rangedHits[i].point);
+                        break;
+                    }
+                    else
+                    {
+                        hasBounced = false;
+                    }
+
+                    Debug.Log($"Hit collider {rangedHits[i].collider.gameObject.name} with a ranged attach");
+                    var health = rangedHits[i].collider.GetComponent<HealthSystem>();
+                    if (health)
+                    {
+                        health.Kill();
+                    }
                 }
+
+                if (!hasBounced) break;
+            
             }
+            
 
             RaycastHit trailHit;
             var bulletTrail = Instantiate(bulletTrailPrefab);
             bulletTrail.SetTransform(transform);
-            if (Physics.Raycast(transform.position, input.LookAtPos - transform.position, out trailHit, Mathf.Infinity, wallLayerMask))
+            if (Physics.Raycast(nextRay, out trailHit, Mathf.Infinity, wallLayerMask))
             {
-                bulletTrail.SetPositions(transform.position, trailHit.point);
+                linePositions.Add(trailHit.point);
+                bulletTrail.SetPositions(linePositions.ToArray());
             }
             else
             {
-                bulletTrail.SetPositions(transform.position, 30f * (input.LookAtPos - transform.position));
+                linePositions.Add(30f * (input.LookAtPos - transform.position));
+                bulletTrail.SetPositions(linePositions.ToArray());
             }
             shotsLeft--;
         }
@@ -127,4 +183,12 @@ public class PlayerRangedAttack : MonoBehaviour
     public float GetReloadProgress() { return reloadTimer; }
     public float GetReloadTime() { return timeToReload; }
 
+}
+
+public class RaycastHitAscendingDistanceComparer : IComparer<RaycastHit>
+{
+    public int Compare(RaycastHit hit1, RaycastHit hit2)
+    {
+        return hit1.distance.CompareTo(hit2.distance);
+    }
 }

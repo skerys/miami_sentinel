@@ -18,9 +18,9 @@ public class BulletTrail : MonoBehaviour
         Destroy(gameObject, testLifetime);
     }
 
-    public void SetPositions(Vector3 startPos, Vector3 endPos)
+    public void SetPositions(Vector3[] positions)
     {
-        Vector3[] positions = { startPos, endPos };
+        lineRenderer.positionCount = positions.Length;
         lineRenderer.SetPositions(positions);
     }
 
