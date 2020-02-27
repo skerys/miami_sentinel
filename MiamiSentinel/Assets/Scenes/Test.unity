@@ -3001,6 +3001,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkerEnemy: {fileID: 8053808066388964808, guid: 182128fd45c277345b1dc0afea3b6154,
     type: 3}
+  shieldEnemy: {fileID: 8053808066388964808, guid: 688ebeeccaa94c448abfefa42e2c3b11,
+    type: 3}
   areaCenter: {x: 0, y: 0, z: -1}
   areaWidthHeight: {x: 48, y: 36}
   defaultPackRadius: 7

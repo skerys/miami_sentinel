@@ -5,13 +5,16 @@ using UnityEngine;
 //currently used in a switch statement but later should be passed down for the factory/object pooling system
 public enum EnemyType
 {
-    Walker
+    Walker,
+    Shield
 };
 
 public class SpawningSystem : MonoBehaviour
 {
     [SerializeField]
     private GameObject walkerEnemy;
+    [SerializeField]
+    private GameObject shieldEnemy;
     [SerializeField]
     private Vector3 areaCenter;
     [SerializeField]
@@ -41,6 +44,18 @@ public class SpawningSystem : MonoBehaviour
         SpawnPack(EnemyType.Walker, 7);
     }
 
+    [ContextMenu("Spawn a Single Sentinel")]
+    void SpawnSingleShield()
+    {
+        SpawnSingle(EnemyType.Shield);
+    }
+
+    [ContextMenu("Spawn a Pack of Sentinels")]
+    void SpawnPackShield()
+    {
+        SpawnPack(EnemyType.Shield, 3, 5);
+    }
+
     //Based on handmade spawning "blocks":
     void SpawnSingle(EnemyType enemyType)
     {
@@ -53,6 +68,12 @@ public class SpawningSystem : MonoBehaviour
                     enemyCountInWorld++;
                     break;
             }
+            case EnemyType.Shield:
+            {
+                    Instantiate(shieldEnemy, new Vector3(spawnLocation.x, walkerEnemy.transform.position.y, spawnLocation.z), Quaternion.identity);
+                    enemyCountInWorld++;
+                    break;
+                }
         }
     }
 
@@ -67,12 +88,17 @@ public class SpawningSystem : MonoBehaviour
     void SpawnPack(EnemyType enemyType, int enemyCount, float packRadius) 
     {
         Vector3 packCenter = GetRandomPointInsideArea(baseSpawnBorder + packRadius);
-        GameObject toSpawn;
+        GameObject toSpawn = null;
         switch (enemyType)
         {
             case EnemyType.Walker:
                 {
                     toSpawn = walkerEnemy;
+                    break;
+                }
+            case EnemyType.Shield:
+                {
+                    toSpawn = shieldEnemy;
                     break;
                 }
         }
@@ -81,7 +107,7 @@ public class SpawningSystem : MonoBehaviour
         {
             Vector2 randomInPackCircle = Random.insideUnitCircle * packRadius;
             Vector3 spawnLocation = packCenter + new Vector3(randomInPackCircle.x, 0f, randomInPackCircle.y);
-            Instantiate(walkerEnemy, new Vector3(spawnLocation.x, walkerEnemy.transform.position.y, spawnLocation.z), Quaternion.identity);
+            Instantiate(toSpawn, new Vector3(spawnLocation.x, walkerEnemy.transform.position.y, spawnLocation.z), Quaternion.identity);
             enemyCountInWorld++;
         }
     }
