@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAttack : MonoBehaviour
+public class EnemyAttack : MonoBehaviour, IEnemyAttack
 {
     [SerializeField]
     private float attackCooldown = 2f;
@@ -28,7 +28,6 @@ public class EnemyAttack : MonoBehaviour
     {
         enemyAI = GetComponent<IEnemyAI>();
         movementInput = GetComponent<IMovementInput>();
-        enemyAI.SetAttackRange(attackRadius);
         OnValidate();
     }
 
@@ -91,6 +90,11 @@ public class EnemyAttack : MonoBehaviour
                 }
             }
         }
+    }
+
+    public float GetAttackRange()
+    {
+        return attackRadius;
     }
 
     void OnEnable()

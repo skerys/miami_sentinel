@@ -36,6 +36,8 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
     {
         Horizontal = 0.0f;
         Vertical = 0.0f;
+
+        attackRange = GetComponent<IEnemyAttack>().GetAttackRange();
     }
 
     void Update()
@@ -45,7 +47,7 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
             if (targetTransform)
             {
                 FollowPlayer();
-                if(enableLocalAvoidance) LocalAvoidance();
+                if (enableLocalAvoidance) LocalAvoidance();
                 CheckForAttack();
             }
             else
@@ -63,7 +65,7 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
     void LocalAvoidance()
     {
         Collider[] foundEnemies = Physics.OverlapSphere(transform.position, localAvoidanceSearchRange, enemyLayerMask);
-        for(int i = 0; i < foundEnemies.Length; ++i)
+        for (int i = 0; i < foundEnemies.Length; ++i)
         {
             Vector3 awayFromEnemy = transform.position - foundEnemies[i].transform.position;
             float multiplier = divideFactorAmongsAllAvoidables ? (localAvoidanceFactor / foundEnemies.Length) : localAvoidanceFactor;
@@ -103,7 +105,7 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
     void CheckForAttack()
     {
         Vector3 vectorToPlayer = targetTransform.transform.position - transform.position;
-        if(vectorToPlayer.magnitude <= attackRange)
+        if (vectorToPlayer.magnitude <= attackRange)
         {
             OnAttack();
         }
@@ -122,10 +124,5 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
     public bool IsEnabled()
     {
         return isActive;
-    }
-
-    public void SetAttackRange(float range)
-    {
-        attackRange = range;
     }
 }

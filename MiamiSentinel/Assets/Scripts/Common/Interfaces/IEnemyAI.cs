@@ -8,5 +8,4 @@ public interface IEnemyAI
     bool IsEnabled();
 
     event Action OnAttack;
-    void SetAttackRange(float range);
 }
