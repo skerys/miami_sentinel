@@ -6,6 +6,7 @@ using System;
 public interface IEnemyAI
 {
     bool IsEnabled();
+    Transform TargetTransform { get; }
 
     event Action OnAttack;
 }

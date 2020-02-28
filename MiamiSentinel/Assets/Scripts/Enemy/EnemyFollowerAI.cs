@@ -24,7 +24,8 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
     [SerializeField]
     private bool divideFactorAmongsAllAvoidables = true;
 
-    private GameObject targetTransform;
+    public Transform TargetTransform { get; private set; }
+
 
     private bool isActive = true;
 
@@ -44,7 +45,7 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
     {
         if (isActive)
         {
-            if (targetTransform)
+            if (TargetTransform)
             {
                 FollowPlayer();
                 if (enableLocalAvoidance) LocalAvoidance();
@@ -87,13 +88,13 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
                 return;
             }
 
-            targetTransform = foundPlayers[0].gameObject;
+            TargetTransform = foundPlayers[0].gameObject.transform;
         }
     }
 
     void FollowPlayer()
     {
-        Vector3 directionToPlayer = targetTransform.transform.position - transform.position;
+        Vector3 directionToPlayer = TargetTransform.transform.position - transform.position;
         directionToPlayer.Normalize();
 
         Debug.DrawLine(transform.position, transform.position + directionToPlayer * 3f);
@@ -104,7 +105,7 @@ public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
 
     void CheckForAttack()
     {
-        Vector3 vectorToPlayer = targetTransform.transform.position - transform.position;
+        Vector3 vectorToPlayer = TargetTransform.transform.position - transform.position;
         if (vectorToPlayer.magnitude <= attackRange)
         {
             OnAttack();

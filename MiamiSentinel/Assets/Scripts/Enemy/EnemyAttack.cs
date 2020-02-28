@@ -28,6 +28,7 @@ public class EnemyAttack : MonoBehaviour, IEnemyAttack
     {
         enemyAI = GetComponent<IEnemyAI>();
         movementInput = GetComponent<IMovementInput>();
+
         OnValidate();
     }
 
