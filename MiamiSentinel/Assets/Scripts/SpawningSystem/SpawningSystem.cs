@@ -2,12 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//currently used in a switch statement but later should be passed down for the factory/object pooling system
-public enum EnemyType
-{
-    Walker,
-    Shield
-};
+
 
 public class SpawningSystem : MonoBehaviour
 {
@@ -47,13 +42,13 @@ public class SpawningSystem : MonoBehaviour
     [ContextMenu("Spawn a Single Sentinel")]
     void SpawnSingleShield()
     {
-        SpawnSingle(EnemyType.Shield);
+        SpawnSingle(EnemyType.Sentinel);
     }
 
     [ContextMenu("Spawn a Pack of Sentinels")]
     void SpawnPackShield()
     {
-        SpawnPack(EnemyType.Shield, 3, 5);
+        SpawnPack(EnemyType.Sentinel, 3, 5);
     }
 
     //Based on handmade spawning "blocks":
@@ -68,7 +63,7 @@ public class SpawningSystem : MonoBehaviour
                     enemyCountInWorld++;
                     break;
             }
-            case EnemyType.Shield:
+            case EnemyType.Sentinel:
             {
                     Instantiate(shieldEnemy, new Vector3(spawnLocation.x, walkerEnemy.transform.position.y, spawnLocation.z), Quaternion.identity);
                     enemyCountInWorld++;
@@ -96,7 +91,7 @@ public class SpawningSystem : MonoBehaviour
                     toSpawn = walkerEnemy;
                     break;
                 }
-            case EnemyType.Shield:
+            case EnemyType.Sentinel:
                 {
                     toSpawn = shieldEnemy;
                     break;

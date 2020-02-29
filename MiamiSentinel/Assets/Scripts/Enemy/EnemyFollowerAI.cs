@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyFollowerAI : MonoBehaviour, IMovementInput, IEnemyAI
+public class EnemyFollowerAI : BaseEnemy, IMovementInput, IEnemyAI
 {
     public float Horizontal { get; private set; }
     public float Vertical { get; private set; }
