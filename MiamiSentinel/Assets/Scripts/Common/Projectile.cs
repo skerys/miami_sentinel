@@ -38,7 +38,7 @@ public class Projectile : MonoBehaviour
         if (damageLayermask == (damageLayermask | 1 << other.gameObject.layer))
         {
             //Do damage
-            var health = GetComponent<HealthSystem>();
+            var health = other.GetComponent<HealthSystem>();
             if (health)
             {
                 health.Damage(1);
