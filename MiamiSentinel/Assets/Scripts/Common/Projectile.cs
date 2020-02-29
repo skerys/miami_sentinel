@@ -7,9 +7,9 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     float speed;
     [SerializeField]
-    LayerMask damageLayermask;
+    LayerMask damageLayerMask;
     [SerializeField]
-    LayerMask shieldLayermask;
+    LayerMask shieldLayerMask;
 
     private Rigidbody body;
     private Collider creatorCollider;
@@ -22,7 +22,7 @@ public class Projectile : MonoBehaviour
     public void SetProjectileDirection(Vector3 direction)
     {
         body.velocity = direction.normalized * speed;
-        transform.LookAt(direction);
+        transform.LookAt(transform.position + direction);
     }
 
     public void SetCreatorCollider(Collider creator)
@@ -34,8 +34,18 @@ public class Projectile : MonoBehaviour
     {
         if (other == creatorCollider) return;
 
-        //shieldLayerMask == (shieldLayerMask | (1 << rangedHits[i].collider.gameObject.layer))
-        if (damageLayermask == (damageLayermask | 1 << other.gameObject.layer))
+        if(shieldLayerMask == (shieldLayerMask | 1 << other.gameObject.layer)){
+            //Get the normal of collision with shield
+            Debug.Log("hit shield");
+            RaycastHit hit;
+            if(Physics.Raycast(transform.position, transform.forward, out hit, shieldLayerMask))
+            {
+                body.velocity = Vector3.Reflect(body.velocity, hit.normal);
+            }
+            //To avoid destruction of this object
+            return;
+        }
+        if (damageLayerMask == (damageLayerMask | 1 << other.gameObject.layer))
         {
             //Do damage
             var health = other.GetComponent<HealthSystem>();

@@ -108,10 +108,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  damageLayermask:
+  damageLayerMask:
     serializedVersion: 2
     m_Bits: 1024
-  shieldLayermask:
+  shieldLayerMask:
     serializedVersion: 2
     m_Bits: 4096
 --- !u!54 &2117112250326735051
