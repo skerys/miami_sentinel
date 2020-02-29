@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 8053808066388964811}
   - component: {fileID: 8053808066388964810}
   - component: {fileID: 8053808066388964809}
-  - component: {fileID: 8053808066388964821}
   - component: {fileID: 8053808066388964823}
   - component: {fileID: 8053808066388964822}
   - component: {fileID: 8053808066388964816}
   - component: {fileID: 8053808066388964817}
   - component: {fileID: 8053808066388964818}
+  - component: {fileID: 9162187893017500026}
   m_Layer: 8
   m_Name: Dummy
   m_TagString: Untagged
@@ -99,20 +99,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8053808066388964821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8053808066388964808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f82e7d6ef76b7f54e954974c946ddb6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitsToKill: 3
-  canBeStunned: 1
 --- !u!114 &8053808066388964823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddcd8327849b5454385f00cbf9b52fd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 0
   searchRange: 50
   playerLayerMask:
     serializedVersion: 2
@@ -198,3 +185,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 2
+--- !u!114 &9162187893017500026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8053808066388964808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a06ac30764bff76479ea8acadb02ed57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitsToKill: 3
+  canBeStunned: 1

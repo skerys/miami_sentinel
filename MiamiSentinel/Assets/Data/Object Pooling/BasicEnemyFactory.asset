@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d095dd1885110f945a66fd4eebdf5327, type: 3}
+  m_Name: BasicEnemyFactory
+  m_EditorClassIdentifier: 
+  walkerPrefab: {fileID: 8053808066388964823, guid: 182128fd45c277345b1dc0afea3b6154,
+    type: 3}
+  sentinelPrefab: {fileID: 8053808066388964823, guid: 688ebeeccaa94c448abfefa42e2c3b11,
+    type: 3}
+  rangerPrefab: {fileID: 8053808066388964823, guid: 9606e52ac84303041a949dce07e156fe,
+    type: 3}

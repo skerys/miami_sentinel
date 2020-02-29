@@ -14,7 +14,7 @@ public class HealthSystem : MonoBehaviour
     private IMovementInput movementInput;
     private float stunTimer;
 
-    void Awake()
+    protected virtual void Awake()
     {
         movementInput = GetComponent<IMovementInput>();
     }
@@ -34,7 +34,7 @@ public class HealthSystem : MonoBehaviour
         }
     }
 
-    public void Kill()
+    public virtual void Kill()
     {
         //Temp solution until object pooling is added
         Destroy(gameObject);

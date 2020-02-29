@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "Object Pooling/Enemy Factory")]
 public class EnemyFactory : GameObjectFactory<BaseEnemy>
 {
     [SerializeField] BaseEnemy walkerPrefab = default;

@@ -7,9 +7,7 @@ using UnityEngine;
 public class SpawningSystem : MonoBehaviour
 {
     [SerializeField]
-    private GameObject walkerEnemy;
-    [SerializeField]
-    private GameObject shieldEnemy;
+    private EnemyFactory enemyFactory;
     [SerializeField]
     private Vector3 areaCenter;
     [SerializeField]
@@ -55,21 +53,9 @@ public class SpawningSystem : MonoBehaviour
     void SpawnSingle(EnemyType enemyType)
     {
         Vector3 spawnLocation = GetRandomPointInsideArea(baseSpawnBorder);
-        switch (enemyType)
-        {
-            case EnemyType.Walker:
-            {
-                    Instantiate(walkerEnemy, new Vector3(spawnLocation.x, walkerEnemy.transform.position.y, spawnLocation.z), Quaternion.identity);
-                    enemyCountInWorld++;
-                    break;
-            }
-            case EnemyType.Sentinel:
-            {
-                    Instantiate(shieldEnemy, new Vector3(spawnLocation.x, walkerEnemy.transform.position.y, spawnLocation.z), Quaternion.identity);
-                    enemyCountInWorld++;
-                    break;
-                }
-        }
+        var newEnemy = enemyFactory.Get(enemyType);
+        newEnemy.transform.position = new Vector3(spawnLocation.x, newEnemy.transform.position.y, spawnLocation.z);
+        enemyCountInWorld++;
     }
 
     //later should implement an alternate version SpawnPackWithWeights that can spawn
@@ -83,26 +69,13 @@ public class SpawningSystem : MonoBehaviour
     void SpawnPack(EnemyType enemyType, int enemyCount, float packRadius) 
     {
         Vector3 packCenter = GetRandomPointInsideArea(baseSpawnBorder + packRadius);
-        GameObject toSpawn = null;
-        switch (enemyType)
-        {
-            case EnemyType.Walker:
-                {
-                    toSpawn = walkerEnemy;
-                    break;
-                }
-            case EnemyType.Sentinel:
-                {
-                    toSpawn = shieldEnemy;
-                    break;
-                }
-        }
 
         for(int i = 0; i < enemyCount; ++i)
         {
             Vector2 randomInPackCircle = Random.insideUnitCircle * packRadius;
             Vector3 spawnLocation = packCenter + new Vector3(randomInPackCircle.x, 0f, randomInPackCircle.y);
-            Instantiate(toSpawn, new Vector3(spawnLocation.x, walkerEnemy.transform.position.y, spawnLocation.z), Quaternion.identity);
+            var newEnemy = enemyFactory.Get(enemyType);
+            newEnemy.transform.position = new Vector3(spawnLocation.x, newEnemy.transform.position.y, spawnLocation.z);
             enemyCountInWorld++;
         }
     }

@@ -41,6 +41,11 @@ public class EnemyFollowerAI : BaseEnemy, IMovementInput, IEnemyAI
         attackRange = GetComponent<IEnemyAttack>().GetAttackRange();
     }
 
+    void OnDisable()
+    {
+        TargetTransform = null;
+    }
+
     void Update()
     {
         if (isActive)
