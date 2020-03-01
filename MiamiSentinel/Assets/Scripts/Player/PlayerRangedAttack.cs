@@ -22,19 +22,29 @@ public class PlayerRangedAttack : MonoBehaviour
     [SerializeField]
     private BulletTrail bulletTrailPrefab = default;
     [SerializeField]
+    private BulletTrail bulletTrailPrefabPiercing = default;
+    [SerializeField]
+    private float timeToChargeEffectStart = 0.1f;
+    [SerializeField]
+    private GameObject chargeEffect;
+    [SerializeField]
+    private GameObject aimingEffect;
+    [SerializeField]
     private ScreenShakeManager screenShake = default;
     [SerializeField]
     private float screenShakeTraumaPerShot = 0.2f;
-    
+    [SerializeField]
+    private float screenShakeTraumaPerPiercingShot = 0.6f;
+
     [Space]
     [SerializeField]
     private int bounceLimit = 3;
     [SerializeField]
-    private bool isPiercing = false;
-    [SerializeField]
     private float timeToCharge = 0.5f;
 
     private float chargeTimer= 0.0f;
+    private bool chargeEffectStarted = false;
+    private bool isPiercing = false;
 
     private float reloadTimer = 0.0f;
     private bool alreadyReloading = false;
@@ -68,12 +78,33 @@ public class PlayerRangedAttack : MonoBehaviour
 
     void ChargeRangedAttack()
     {
+        if (shotsLeft <= 0) return;
+
         if(chargeTimer < timeToCharge)
         {
             chargeTimer += Time.deltaTime;
+
+            if(!chargeEffectStarted && chargeTimer >= timeToChargeEffectStart)
+            {
+                chargeEffect.SetActive(true);
+                var particleSystems = chargeEffect.GetComponentsInChildren<ParticleSystem>();
+                foreach(var system in particleSystems)
+                {
+                    system.Play();
+                }
+                chargeEffectStarted = true;
+            }
+
             if(chargeTimer >= timeToCharge)
             {
                 isPiercing = true;
+                chargeEffect.SetActive(false);
+                aimingEffect.SetActive(true);
+                var particleSystems = aimingEffect.GetComponentsInChildren<ParticleSystem>();
+                foreach (var system in particleSystems)
+                {
+                    system.Play();
+                }
             }
         }
     }
@@ -88,7 +119,8 @@ public class PlayerRangedAttack : MonoBehaviour
             nextRay.origin = transform.position;
             nextRay.direction = input.LookAtPos - transform.position;
 
-            screenShake.AddTrauma(screenShakeTraumaPerShot);
+            float trauma = isPiercing ? screenShakeTraumaPerPiercingShot : screenShakeTraumaPerShot;
+            screenShake.AddTrauma(trauma);
 
             int bounces = 0;
             int rangedHitCount = 0;
@@ -145,7 +177,7 @@ public class PlayerRangedAttack : MonoBehaviour
                 if (!hasBounced) break;
             
             }
-            var bulletTrail = Instantiate(bulletTrailPrefab);
+            var bulletTrail = isPiercing ? Instantiate(bulletTrailPrefabPiercing) : Instantiate(bulletTrailPrefab);
             bulletTrail.SetTransform(transform);
 
             Debug.Log($"ranged hit count {rangedHitCount}");
@@ -168,7 +200,10 @@ public class PlayerRangedAttack : MonoBehaviour
 
             isPiercing = false;
             chargeTimer = 0.0f;
-            
+            chargeEffectStarted = false;
+            chargeEffect.SetActive(false);
+            aimingEffect.SetActive(false);
+
         }
     }
 
