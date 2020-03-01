@@ -106,6 +106,7 @@ public class PlayerRangedAttack : MonoBehaviour
                 {
                     Array.Clear(rangedHits, 0, rangedHits.Length);
                     rangedHitCount = Physics.Raycast(nextRay, out rangedHits[0], Mathf.Infinity, rayMask) ? 1 : 0;
+                    if (rangedHitCount == 0) { break; }
                 }
                 
 
