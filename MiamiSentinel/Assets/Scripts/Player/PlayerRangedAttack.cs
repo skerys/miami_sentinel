@@ -5,26 +5,36 @@ using System;
 
 public class PlayerRangedAttack : MonoBehaviour
 {
+    [Header("Layer Masks")]
     [SerializeField]
     private LayerMask enemyLayerMask = default;
     [SerializeField]
     private LayerMask shieldLayerMask = default;
+    [SerializeField]
+    private LayerMask wallLayerMask = default;
 
+    [Header("Reloading")]
     [SerializeField]
     private float timeToReload = 0.5f;
     [SerializeField, Range(0.0f, 1.0f)]
     private float speedModifierOnReload = 0.5f;
+    [Header("Effects")]
     [SerializeField]
     private BulletTrail bulletTrailPrefab = default;
     [SerializeField]
     private ScreenShakeManager screenShake = default;
     [SerializeField]
     private float screenShakeTraumaPerShot = 0.2f;
-    [SerializeField]
-    private LayerMask wallLayerMask = default;
-
+    
+    [Space]
     [SerializeField]
     private int bounceLimit = 3;
+    [SerializeField]
+    private bool isPiercing = false;
+    [SerializeField]
+    private float timeToCharge = 0.5f;
+
+    private float chargeTimer= 0.0f;
 
     private float reloadTimer = 0.0f;
     private bool alreadyReloading = false;
@@ -41,7 +51,6 @@ public class PlayerRangedAttack : MonoBehaviour
 
     private LayerMask rayMask;
     private bool hasBounced = false;
-    private int bounces = 0;
 
     private RaycastHitAscendingDistanceComparer comparer;
 
@@ -57,6 +66,18 @@ public class PlayerRangedAttack : MonoBehaviour
         comparer = new RaycastHitAscendingDistanceComparer();
     }
 
+    void ChargeRangedAttack()
+    {
+        if(chargeTimer < timeToCharge)
+        {
+            chargeTimer += Time.deltaTime;
+            if(chargeTimer >= timeToCharge)
+            {
+                isPiercing = true;
+            }
+        }
+    }
+
     void DoRangedAttack()
     {
         if (shotsLeft > 0)
@@ -68,14 +89,25 @@ public class PlayerRangedAttack : MonoBehaviour
             nextRay.direction = input.LookAtPos - transform.position;
 
             screenShake.AddTrauma(screenShakeTraumaPerShot);
-            bounces = 0;
+
+            int bounces = 0;
+            int rangedHitCount = 0;
+
             while(bounces < bounceLimit)
             {
-              
-                int rangedHitCount = Physics.RaycastNonAlloc(nextRay, rangedHits, Mathf.Infinity, rayMask);
-                if(rangedHitCount == 0) { break; }
+                if(isPiercing)
+                {
+                    rangedHitCount = Physics.RaycastNonAlloc(nextRay, rangedHits, Mathf.Infinity, rayMask);
+                    if (rangedHitCount == 0) { break; }
 
-                Array.Sort(rangedHits, 0, rangedHitCount, comparer);
+                    Array.Sort(rangedHits, 0, rangedHitCount, comparer);
+                }
+                else
+                {
+                    Array.Clear(rangedHits, 0, rangedHits.Length);
+                    rangedHitCount = Physics.Raycast(nextRay, out rangedHits[0], Mathf.Infinity, rayMask) ? 1 : 0;
+                }
+                
 
                 for (int i = 0; i < rangedHitCount; ++i)
                 {
@@ -102,28 +134,40 @@ public class PlayerRangedAttack : MonoBehaviour
                     if (health)
                     {
                         health.Kill();
+                        if (!isPiercing)
+                        {
+                            linePositions.Add(rangedHits[i].point);
+                        }
                     }
                 }
 
                 if (!hasBounced) break;
             
             }
-            
-
-            RaycastHit trailHit;
             var bulletTrail = Instantiate(bulletTrailPrefab);
             bulletTrail.SetTransform(transform);
-            if (Physics.Raycast(nextRay, out trailHit, Mathf.Infinity, wallLayerMask))
+
+            Debug.Log($"ranged hit count {rangedHitCount}");
+
+            if(isPiercing || rangedHitCount == 0)
             {
-                linePositions.Add(trailHit.point);
-                bulletTrail.SetPositions(linePositions.ToArray());
+                RaycastHit trailHit;
+                if (Physics.Raycast(nextRay, out trailHit, Mathf.Infinity, wallLayerMask))
+                {
+                    linePositions.Add(trailHit.point);
+                }
+                else
+                {
+                    linePositions.Add(30f * (input.LookAtPos - transform.position));
+                }
             }
-            else
-            {
-                linePositions.Add(30f * (input.LookAtPos - transform.position));
-                bulletTrail.SetPositions(linePositions.ToArray());
-            }
+         
+            bulletTrail.SetPositions(linePositions.ToArray());
             shotsLeft--;
+
+            isPiercing = false;
+            chargeTimer = 0.0f;
+            
         }
     }
 
@@ -170,14 +214,16 @@ public class PlayerRangedAttack : MonoBehaviour
 
     void OnEnable()
     {
-        input.OnRangedAttack += DoRangedAttack;
+        input.OnRangedAttack += ChargeRangedAttack;
+        input.OnRangedAttackRelease += DoRangedAttack;
         input.OnReload += ReloadUpdate;
         input.OnReleaseReload += ReloadEnd;
     }
 
     void OnDisable()
     {
-        input.OnRangedAttack -= DoRangedAttack;
+        input.OnRangedAttack -= ChargeRangedAttack;
+        input.OnRangedAttackRelease -= DoRangedAttack;
         input.OnReload -= ReloadUpdate;
         input.OnReleaseReload -= ReloadEnd;
     }

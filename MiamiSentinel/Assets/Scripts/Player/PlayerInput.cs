@@ -20,7 +20,10 @@ public class PlayerInput : MonoBehaviour, IMovementInput
     public Vector3 LookAtPos { get; private set; }
 
     public event Action OnMeleeAttack = delegate { };
+
     public event Action OnRangedAttack = delegate { };
+    public event Action OnRangedAttackRelease = delegate { };
+
     public event Action OnReload = delegate { };
     public event Action OnReleaseReload = delegate { };
 
@@ -54,9 +57,14 @@ public class PlayerInput : MonoBehaviour, IMovementInput
                 OnMeleeAttack();
             }
 
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButton(1))
             {
                 OnRangedAttack();
+            }
+
+            if (Input.GetMouseButtonUp(1))
+            {
+                OnRangedAttackRelease();
             }
 
             if (Input.GetKey(reloadKey))

@@ -198,15 +198,22 @@ MonoBehaviour:
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  shieldLayerMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 2048
   timeToReload: 1
   speedModifierOnReload: 0.5
   bulletTrailPrefab: {fileID: 8242942511011740512, guid: 1521b06770d23cd4490ff4ed9a753a75,
     type: 3}
   screenShake: {fileID: 0}
   screenShakeTraumaPerShot: 0.15
-  wallLayerMask:
-    serializedVersion: 2
-    m_Bits: 2048
+  bounceLimit: 3
+  isPiercing: 0
+  timeToCharge: 0.5
+  canReload: 1
 --- !u!114 &3785428737177540421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,8 +256,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dashMode: 1
   dashTime: 0.2
-  dashSpeed: 10
-  dashCooldown: 0
+  dashSpeed: 15
+  dashCooldown: 0.5
+  canDash: 1
 --- !u!1 &3785428737561001090
 GameObject:
   m_ObjectHideFlags: 0

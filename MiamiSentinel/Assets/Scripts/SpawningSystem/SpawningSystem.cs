@@ -52,9 +52,9 @@ public class SpawningSystem : MonoBehaviour
     //Based on handmade spawning "blocks":
     void SpawnSingle(EnemyType enemyType)
     {
-        Vector3 spawnLocation = GetRandomPointInsideArea(baseSpawnBorder);
+        Vector2 spawnLocation = GetRandomPointInsideArea(baseSpawnBorder);
         var newEnemy = enemyFactory.Get(enemyType);
-        newEnemy.transform.position = new Vector3(spawnLocation.x, newEnemy.transform.position.y, spawnLocation.z);
+        newEnemy.transform.position = new Vector3(spawnLocation.x, newEnemy.transform.position.y, spawnLocation.y);
         enemyCountInWorld++;
     }
 
@@ -68,33 +68,34 @@ public class SpawningSystem : MonoBehaviour
     
     void SpawnPack(EnemyType enemyType, int enemyCount, float packRadius) 
     {
-        Vector3 packCenter = GetRandomPointInsideArea(baseSpawnBorder + packRadius);
+        Vector2 packCenter = GetRandomPointInsideArea(baseSpawnBorder + packRadius);
 
         for(int i = 0; i < enemyCount; ++i)
         {
             Vector2 randomInPackCircle = Random.insideUnitCircle * packRadius;
-            Vector3 spawnLocation = packCenter + new Vector3(randomInPackCircle.x, 0f, randomInPackCircle.y);
+            Vector2 spawnLocation = packCenter + new Vector2(randomInPackCircle.x, randomInPackCircle.y);
             var newEnemy = enemyFactory.Get(enemyType);
-            newEnemy.transform.position = new Vector3(spawnLocation.x, newEnemy.transform.position.y, spawnLocation.z);
+            newEnemy.transform.position = new Vector3(spawnLocation.x, newEnemy.transform.position.y, spawnLocation.y);
             enemyCountInWorld++;
         }
     }
 
-    Vector3 GetRandomPointInsideArea(float border)
+    Vector2 GetRandomPointInsideArea(float border)
     {
         for(int i = 0; i < 10; ++i)
         {
             float randomX = Random.Range(areaCenter.x - areaWidthHeight.x / 2 + border, areaCenter.x + areaWidthHeight.x / 2 - border);
             float randomY = Random.Range(areaCenter.z - areaWidthHeight.y / 2 + border, areaCenter.z + areaWidthHeight.y / 2 - border);
 
-            Vector3 randomPoint = new Vector3(randomX, 0.0f, randomY);
-            if(Vector3.Distance(player.transform.position, randomPoint) > playerSafeDistance)
+            Vector2 randomPoint = new Vector2(randomX, randomY);
+            Vector2 playerPos = new Vector2(player.transform.position.x, player.transform.position.z);
+            if(Vector2.Distance(playerPos, randomPoint) > playerSafeDistance)
             {
                 return randomPoint;
             }
         }
         Debug.LogError($"Couldn't find an available point with border: {border}.");
-        return Vector3.zero;
+        return Vector2.zero;
     }
 
     void OnDrawGizmosSelected()
