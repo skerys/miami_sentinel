@@ -50,7 +50,7 @@ public class SpawningSystem : MonoBehaviour
     }
 
     //Based on handmade spawning "blocks":
-    void SpawnSingle(EnemyType enemyType)
+    public void SpawnSingle(EnemyType enemyType)
     {
         Vector2 spawnLocation = GetRandomPointInsideArea(baseSpawnBorder);
         var newEnemy = enemyFactory.Get(enemyType);
@@ -60,13 +60,13 @@ public class SpawningSystem : MonoBehaviour
 
     //later should implement an alternate version SpawnPackWithWeights that can spawn
     //multiple different enemies and has probability weights for each one
-    void SpawnPack(EnemyType enemyType, int enemyCount)
+    public void SpawnPack(EnemyType enemyType, int enemyCount)
     {
         SpawnPack(enemyType, enemyCount, defaultPackRadius);
     }
 
     
-    void SpawnPack(EnemyType enemyType, int enemyCount, float packRadius) 
+    public void SpawnPack(EnemyType enemyType, int enemyCount, float packRadius) 
     {
         Vector2 packCenter = GetRandomPointInsideArea(baseSpawnBorder + packRadius);
 
