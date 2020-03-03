@@ -14,6 +14,13 @@ public class EnemyHealth : HealthSystem
 
     public override void Kill()
     {
-        baseEnemy.OriginFactory.Reclaim(baseEnemy);
+        if (baseEnemy.OriginFactory)
+        {
+            baseEnemy.OriginFactory.Reclaim(baseEnemy);
+        }
+        else 
+        {
+            Destroy(gameObject);
+        } 
     }
 }
