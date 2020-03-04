@@ -18,3 +18,7 @@ MonoBehaviour:
     type: 3}
   rangerPrefab: {fileID: 8053808066388964823, guid: 9606e52ac84303041a949dce07e156fe,
     type: 3}
+  summonerPrefab: {fileID: 3870445681030237304, guid: bf3bd34c348f9784fa76c297f9bb4fc7,
+    type: 3}
+  minionPrefab: {fileID: 8053808066388964823, guid: ee0fd99fb10e74c4f8f7324350063241,
+    type: 3}

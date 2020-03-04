@@ -168,6 +168,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6557fc0459b3def479505516a4108199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 3
+  wanderTime: 2
+  waitTime: 1
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 0
+  minWanderDistance: 3
 --- !u!114 &7728997576525023592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,3 +187,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c9c149ee2dea5b45b0286ead668a26d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toSummon: 4
+  enemyFactory: {fileID: 11400000, guid: e4e6858a54a63314b9f7c83da8b8225b, type: 2}
+  summonMinRadius: 1
+  summonMaxRadius: 3
+  summonCooldown: 5
+  summonCount: 3

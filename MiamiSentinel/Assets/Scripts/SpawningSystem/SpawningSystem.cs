@@ -25,6 +25,7 @@ public class SpawningSystem : MonoBehaviour
 
     private int enemyCountInWorld;
 
+
     [ContextMenu("Spawn a Single Walker")]
     void SpawnSingleWalker()
     {
@@ -47,6 +48,12 @@ public class SpawningSystem : MonoBehaviour
     void SpawnPackShield()
     {
         SpawnPack(EnemyType.Sentinel, 3, 5);
+    }
+
+    [ContextMenu("Spawn a Summoner")]
+    void SpawnSingleSummoner()
+    {
+        SpawnSingle(EnemyType.Summoner);
     }
 
     //Based on handmade spawning "blocks":

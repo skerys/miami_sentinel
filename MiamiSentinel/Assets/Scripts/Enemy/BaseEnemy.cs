@@ -6,7 +6,9 @@ public enum EnemyType
 {
     Walker,
     Sentinel,
-    Ranger
+    Ranger,
+    Summoner,
+    Minion
 };
 
 public class BaseEnemy : MonoBehaviour

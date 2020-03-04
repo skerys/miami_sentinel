@@ -9,6 +9,8 @@ public class EnemyFactory : GameObjectFactory<BaseEnemy>
     [SerializeField] BaseEnemy walkerPrefab = default;
     [SerializeField] BaseEnemy sentinelPrefab = default;
     [SerializeField] BaseEnemy rangerPrefab = default;
+    [SerializeField] BaseEnemy summonerPrefab = default;
+    [SerializeField] BaseEnemy minionPrefab = default;
 
     public void OnEnable()
     {
@@ -16,6 +18,8 @@ public class EnemyFactory : GameObjectFactory<BaseEnemy>
         prefabs.Add(walkerPrefab);
         prefabs.Add(sentinelPrefab);
         prefabs.Add(rangerPrefab);
+        prefabs.Add(summonerPrefab);
+        prefabs.Add(minionPrefab);
     }
 
     protected void CreatePools()
@@ -44,6 +48,7 @@ public class EnemyFactory : GameObjectFactory<BaseEnemy>
 
     public BaseEnemy Get(EnemyType type)
     {
+        Debug.Log($"Get type {type}, cast to int = {(int)type}");
         if (pools == null)
         {
             CreatePools();

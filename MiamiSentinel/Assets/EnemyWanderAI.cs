@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyWanderAI : MonoBehaviour, IMovementInput, IEnemyAI
+public class EnemyWanderAI : BaseEnemy, IMovementInput, IEnemyAI
 {
     [SerializeField]
     private float wanderTime = 2.0f;
@@ -65,6 +65,8 @@ public class EnemyWanderAI : MonoBehaviour, IMovementInput, IEnemyAI
                 currentDirection = FindNewDirection();
             }
         }
+
+        OnAttack();
     }
 
     Vector2 FindNewDirection()

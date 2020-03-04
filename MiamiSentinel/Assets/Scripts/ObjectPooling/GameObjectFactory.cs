@@ -56,7 +56,6 @@ public abstract class GameObjectFactory<T> : ScriptableObject where T : MonoBeha
 
     public void Unload()
     {
-        Debug.Log(name + " has been disabled");
         SceneManager.UnloadSceneAsync(name);
         foreach (var pool in pools)
         {

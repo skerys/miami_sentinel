@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddcd8327849b5454385f00cbf9b52fd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 0
+  enemyType: 4
   searchRange: 50
   playerLayerMask:
     serializedVersion: 2
