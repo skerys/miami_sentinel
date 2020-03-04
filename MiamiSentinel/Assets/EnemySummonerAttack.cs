@@ -52,4 +52,11 @@ public class EnemySummonerAttack : MonoBehaviour
             summoned.transform.position = new Vector3(summonPos.x, summoned.transform.position.y, summonPos.y);
         }
     }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        GizmoExtensions.DrawCircle(transform.position, summonMaxRadius, 20);
+        GizmoExtensions.DrawCircle(transform.position, summonMinRadius, 20);
+    }
 }

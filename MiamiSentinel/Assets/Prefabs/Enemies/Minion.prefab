@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2be329a0b9d24a144a2db36124d30279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 7
+  maxSpeed: 6
   maxAcceleration: 50
 --- !u!54 &8053808066388964816
 Rigidbody:
