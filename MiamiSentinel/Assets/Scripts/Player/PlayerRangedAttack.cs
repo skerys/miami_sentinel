@@ -156,7 +156,8 @@ public class PlayerRangedAttack : MonoBehaviour
                         hasBounced = true;
 
                         linePositions.Add(rangedHits[i].point);
-                        Instantiate(hitEffect, rangedHits[i].point, Quaternion.identity);
+                        var hitEffectObj = Instantiate(hitEffect, rangedHits[i].point, Quaternion.identity);
+                        hitEffectObj.transform.LookAt(rangedHits[i].point + rangedHits[i].normal);
                         break;
                     }
                     else
@@ -169,7 +170,8 @@ public class PlayerRangedAttack : MonoBehaviour
                     if (health)
                     {
                         health.Kill();
-                        Instantiate(hitEffect, rangedHits[i].point, Quaternion.identity);
+                        var hitEffectObj = Instantiate(hitEffect, rangedHits[i].point, Quaternion.identity);
+                        hitEffectObj.transform.LookAt(rangedHits[i].point + rangedHits[i].normal);
                         if (!isPiercing)
                         {
                             linePositions.Add(rangedHits[i].point);
@@ -191,7 +193,8 @@ public class PlayerRangedAttack : MonoBehaviour
                 if (Physics.Raycast(nextRay, out trailHit, Mathf.Infinity, wallLayerMask))
                 {
                     linePositions.Add(trailHit.point);
-                    Instantiate(hitEffect, trailHit.point, Quaternion.identity);
+                    var hitEffectObj = Instantiate(hitEffect, trailHit.point, Quaternion.identity);
+                    hitEffectObj.transform.LookAt(trailHit.point + trailHit.normal);
                 }
                 else
                 {
