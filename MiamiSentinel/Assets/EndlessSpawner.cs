@@ -13,6 +13,7 @@ public class EndlessSpawner : MonoBehaviour
     private SpawningSystem spawningSystem;
 
     private int currentLevel = 0;
+    private int maxLevel;
     private int actionsDone;
 
     private List<List<Action>> levelSpawnLists;
@@ -48,6 +49,7 @@ public class EndlessSpawner : MonoBehaviour
         levelSpawnLists.Add(levelTwoSpawns);
         levelSpawnLists.Add(levelThreeSpawns);
         levelSpawnLists.Add(levelFourSpawns);
+        maxLevel = levelSpawnLists.Count;
 
         IncreaseLevel();
 
@@ -75,6 +77,7 @@ public class EndlessSpawner : MonoBehaviour
 
     void IncreaseLevel()
     {
+        if (currentLevel >= maxLevel) return;
         currentLevel++;
         foreach(var spawn in levelSpawnLists[currentLevel - 1])
         {
