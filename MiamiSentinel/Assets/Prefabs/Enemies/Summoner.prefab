@@ -173,7 +173,7 @@ MonoBehaviour:
   waitTime: 1
   wallMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   minWanderDistance: 3
 --- !u!114 &7728997576525023592
 MonoBehaviour:
