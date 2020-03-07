@@ -30,6 +30,8 @@ public class PlayerRangedAttack : MonoBehaviour
     [SerializeField]
     private GameObject aimingEffect;
     [SerializeField]
+    private GameObject hitEffect = default;
+    [SerializeField]
     private ScreenShakeManager screenShake = default;
     [SerializeField]
     private float screenShakeTraumaPerShot = 0.2f;
@@ -144,7 +146,6 @@ public class PlayerRangedAttack : MonoBehaviour
 
                 for (int i = 0; i < rangedHitCount; ++i)
                 {
-                    //Debug.Log($"Shield layer mask value: {shieldLayerMask.value}\nHit collider layer value: {rangedHits[i].collider.gameObject.layer}");
                     if (shieldLayerMask == (shieldLayerMask | (1 << rangedHits[i].collider.gameObject.layer)))
                     {
                         Debug.Log($"Bounce no. {bounces} happened");
@@ -155,6 +156,7 @@ public class PlayerRangedAttack : MonoBehaviour
                         hasBounced = true;
 
                         linePositions.Add(rangedHits[i].point);
+                        Instantiate(hitEffect, rangedHits[i].point, Quaternion.identity);
                         break;
                     }
                     else
@@ -167,6 +169,7 @@ public class PlayerRangedAttack : MonoBehaviour
                     if (health)
                     {
                         health.Kill();
+                        Instantiate(hitEffect, rangedHits[i].point, Quaternion.identity);
                         if (!isPiercing)
                         {
                             linePositions.Add(rangedHits[i].point);
@@ -188,6 +191,7 @@ public class PlayerRangedAttack : MonoBehaviour
                 if (Physics.Raycast(nextRay, out trailHit, Mathf.Infinity, wallLayerMask))
                 {
                     linePositions.Add(trailHit.point);
+                    Instantiate(hitEffect, trailHit.point, Quaternion.identity);
                 }
                 else
                 {
