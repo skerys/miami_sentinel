@@ -35,7 +35,19 @@ public class SpawningSystem : MonoBehaviour
     [ContextMenu("Spawn a Pack of Walkers")]
     void SpawnPackWalker()
     {
-        SpawnPack(EnemyType.Walker, 7);
+        SpawnPack(EnemyType.Walker, 3);
+    }
+
+    [ContextMenu("Spawn a Single Ranger")]
+    void SpawnSingleRanger()
+    {
+        SpawnSingle(EnemyType.Ranger);
+    }
+
+    [ContextMenu("Spawn a Pack of Rangers")]
+    void SpawnPackRangers()
+    {
+        SpawnPack(EnemyType.Ranger, 3);
     }
 
     [ContextMenu("Spawn a Single Sentinel")]
