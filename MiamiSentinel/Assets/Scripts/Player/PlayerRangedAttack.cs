@@ -43,6 +43,8 @@ public class PlayerRangedAttack : MonoBehaviour
     private int bounceLimit = 3;
     [SerializeField]
     private float timeToCharge = 0.5f;
+    [SerializeField]
+    private float sphereCastRadius = 0.3f;
 
     private float chargeTimer= 0.0f;
     private bool chargeEffectStarted = false;
@@ -131,7 +133,7 @@ public class PlayerRangedAttack : MonoBehaviour
             {
                 if(isPiercing)
                 {
-                    rangedHitCount = Physics.RaycastNonAlloc(nextRay, rangedHits, Mathf.Infinity, rayMask);
+                    rangedHitCount = Physics.SphereCastNonAlloc(nextRay, sphereCastRadius, rangedHits, Mathf.Infinity, rayMask);
                     if (rangedHitCount == 0) { break; }
 
                     Array.Sort(rangedHits, 0, rangedHitCount, comparer);
@@ -139,7 +141,7 @@ public class PlayerRangedAttack : MonoBehaviour
                 else
                 {
                     Array.Clear(rangedHits, 0, rangedHits.Length);
-                    rangedHitCount = Physics.Raycast(nextRay, out rangedHits[0], Mathf.Infinity, rayMask) ? 1 : 0;
+                    rangedHitCount = Physics.SphereCast(nextRay, sphereCastRadius, out rangedHits[0], Mathf.Infinity, rayMask) ? 1 : 0;
                     if (rangedHitCount == 0) { break; }
                 }
                 
