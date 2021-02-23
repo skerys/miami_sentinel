@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
+    [SerializeField] private GameObject debugAttackEffect = default;
     [SerializeField]
     private LayerMask enemyLayerMask = default;
 
@@ -23,10 +24,13 @@ public class PlayerAttack : MonoBehaviour
     private PlayerInput input;
 
     private float minDotProduct;
+
+    private Collider myCollider;
     private Collider[] hitColliders = new Collider[20];
     void Awake()
     {
         input = GetComponent<PlayerInput>();
+        myCollider = GetComponent<Collider>();
         OnValidate();
     }
    
@@ -41,8 +45,14 @@ public class PlayerAttack : MonoBehaviour
         if (!canAttack)
         {
             cooldownTimer += Time.deltaTime;
-            if(cooldownTimer >= attackCooldown)
+
+            if(debugAttackEffect.activeInHierarchy && cooldownTimer >= 0.05f)
             {
+                debugAttackEffect.SetActive(false);
+            }
+
+            if(cooldownTimer >= attackCooldown)
+            {     
                 canAttack = true;
                 cooldownTimer = 0.0f;
             }
@@ -53,6 +63,8 @@ public class PlayerAttack : MonoBehaviour
     {
         if (canAttack)
         {
+            debugAttackEffect.SetActive(true);
+
             int hitCount = Physics.OverlapSphereNonAlloc(transform.position, attackRadius, hitColliders, enemyLayerMask);
             for (int i = 0; i < hitCount; ++i)
             {
@@ -66,6 +78,15 @@ public class PlayerAttack : MonoBehaviour
                     {
                         health.Damage(1);
                         health.Stun(stunDuration);
+                        continue;
+                    }
+
+                    var projectile = hitColliders[i].GetComponent<Projectile>();
+                    if(projectile)
+                    {
+                        projectile.SetCreatorCollider(myCollider);
+                        projectile.SetProjectileDirection(input.LookAtPos - projectile.transform.position);
+                        projectile.SetDamageTarget(true);
                     }
                 }
             }

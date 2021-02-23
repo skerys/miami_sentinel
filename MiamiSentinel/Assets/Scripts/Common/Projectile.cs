@@ -7,16 +7,24 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     float speed;
     [SerializeField]
-    LayerMask damageLayerMask;
+    LayerMask friendlyLayerMask;
+    [SerializeField]
+    LayerMask enemyLayerMask;
     [SerializeField]
     LayerMask shieldLayerMask;
 
     private Rigidbody body;
     private Collider creatorCollider;
+    private LayerMask damageLayerMask;
 
     void Awake()
     {
         body = GetComponent<Rigidbody>();
+    }
+
+    public void SetDamageTarget(bool friendly)
+    {
+        damageLayerMask = friendly ? friendlyLayerMask : enemyLayerMask;
     }
 
     public void SetProjectileDirection(Vector3 direction)
@@ -36,7 +44,6 @@ public class Projectile : MonoBehaviour
 
         if(shieldLayerMask == (shieldLayerMask | 1 << other.gameObject.layer)){
             //Get the normal of collision with shield
-            Debug.Log("hit shield");
             RaycastHit hit;
             if(Physics.Raycast(transform.position, transform.forward, out hit, shieldLayerMask))
             {

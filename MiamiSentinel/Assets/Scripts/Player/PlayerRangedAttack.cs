@@ -14,10 +14,10 @@ public class PlayerRangedAttack : MonoBehaviour
     private LayerMask wallLayerMask = default;
 
     [Header("Reloading")]
-    [SerializeField]
-    private float timeToReload = 0.5f;
-    [SerializeField, Range(0.0f, 1.0f)]
-    private float speedModifierOnReload = 0.5f;
+    [SerializeField] private float timeToReload = 0.5f;
+    [SerializeField, Range(0.0f, 1.0f)] private float speedModifierOnReload = 0.5f;
+    [SerializeField] private int maxShotsLeft = 6;
+
     [Header("Effects")]
     [SerializeField]
     private BulletTrail bulletTrailPrefab = default;
@@ -37,6 +37,7 @@ public class PlayerRangedAttack : MonoBehaviour
     private float screenShakeTraumaPerShot = 0.2f;
     [SerializeField]
     private float screenShakeTraumaPerPiercingShot = 0.6f;
+    [SerializeField] private float hitStopAmount = 0.02f;
 
     [Space]
     [SerializeField]
@@ -65,6 +66,7 @@ public class PlayerRangedAttack : MonoBehaviour
 
     private LayerMask rayMask;
     private bool hasBounced = false;
+    private bool wallBounce;
 
     private RaycastHitAscendingDistanceComparer comparer;
 
@@ -76,7 +78,7 @@ public class PlayerRangedAttack : MonoBehaviour
         bodyMovement = GetComponent<BodyMovement>();
         dash = GetComponent<PlayerDash>();
 
-        rayMask = enemyLayerMask | shieldLayerMask;
+        rayMask = enemyLayerMask | shieldLayerMask | wallLayerMask;
         comparer = new RaycastHitAscendingDistanceComparer();
     }
 
@@ -113,6 +115,18 @@ public class PlayerRangedAttack : MonoBehaviour
         }
     }
 
+    void BounceShot(RaycastHit hit, ref List<Vector3> linePositions)
+    {
+        Vector3 newDir = Vector3.Reflect(nextRay.direction, hit.normal);
+        nextRay.origin = hit.point;
+        nextRay.direction = newDir;
+        hasBounced = true;
+
+        linePositions.Add(hit.point);
+        var hitEffectObj = Instantiate(hitEffect, hit.point, Quaternion.identity);
+        hitEffectObj.transform.LookAt(hit.point + hit.normal);
+    }
+
     void DoRangedAttack()
     {
         if (shotsLeft > 0)
@@ -128,6 +142,8 @@ public class PlayerRangedAttack : MonoBehaviour
 
             int bounces = 0;
             int rangedHitCount = 0;
+            //Only bounce off wall when shot is charged
+            wallBounce = isPiercing;
 
             while(bounces < bounceLimit)
             {
@@ -150,16 +166,25 @@ public class PlayerRangedAttack : MonoBehaviour
                 {
                     if (shieldLayerMask == (shieldLayerMask | (1 << rangedHits[i].collider.gameObject.layer)))
                     {
-                        Debug.Log($"Bounce no. {bounces} happened");
-                        Vector3 newDir = Vector3.Reflect(nextRay.direction, rangedHits[i].normal);
-                        nextRay.origin = rangedHits[i].point;
-                        nextRay.direction = newDir;
                         bounces++;
-                        hasBounced = true;
-
-                        linePositions.Add(rangedHits[i].point);
-                        var hitEffectObj = Instantiate(hitEffect, rangedHits[i].point, Quaternion.identity);
-                        hitEffectObj.transform.LookAt(rangedHits[i].point + rangedHits[i].normal);
+                        BounceShot(rangedHits[i], ref linePositions);
+                        break;
+                    }
+                    else if( (wallLayerMask == (wallLayerMask | (1 << rangedHits[i].collider.gameObject.layer))) )
+                    {
+                        if(wallBounce)
+                        {
+                            bounces++;
+                            wallBounce = false;
+                            BounceShot(rangedHits[i], ref linePositions);
+                        }
+                        else
+                        {
+                            linePositions.Add(rangedHits[i].point);
+                            var hitEffectObj = Instantiate(hitEffect, rangedHits[i].point, Quaternion.identity);
+                            hitEffectObj.transform.LookAt(rangedHits[i].point + rangedHits[i].normal);
+                            hasBounced = false;
+                        }
                         break;
                     }
                     else
@@ -167,7 +192,6 @@ public class PlayerRangedAttack : MonoBehaviour
                         hasBounced = false;
                     }
 
-                    Debug.Log($"Hit collider {rangedHits[i].collider.gameObject.name} with a ranged attach");
                     var health = rangedHits[i].collider.GetComponent<HealthSystem>();
                     if (health)
                     {
@@ -187,23 +211,12 @@ public class PlayerRangedAttack : MonoBehaviour
             var bulletTrail = isPiercing ? Instantiate(bulletTrailPrefabPiercing) : Instantiate(bulletTrailPrefab);
             bulletTrail.SetTransform(transform);
 
-            Debug.Log($"ranged hit count {rangedHitCount}");
-
-            if(isPiercing || rangedHitCount == 0)
+            //Do hitstop if an enemy was hit
+            if(rangedHitCount > 0)
             {
-                RaycastHit trailHit;
-                if (Physics.Raycast(nextRay, out trailHit, Mathf.Infinity, wallLayerMask))
-                {
-                    linePositions.Add(trailHit.point);
-                    var hitEffectObj = Instantiate(hitEffect, trailHit.point, Quaternion.identity);
-                    hitEffectObj.transform.LookAt(trailHit.point + trailHit.normal);
-                }
-                else
-                {
-                    linePositions.Add(30f * (input.LookAtPos - transform.position));
-                }
+                HitStopManager.Instance.HitStop(hitStopAmount);
             }
-         
+
             bulletTrail.SetPositions(linePositions.ToArray());
             shotsLeft--;
 
@@ -212,7 +225,7 @@ public class PlayerRangedAttack : MonoBehaviour
             chargeEffectStarted = false;
             chargeEffect.SetActive(false);
             aimingEffect.SetActive(false);
-
+            wallBounce = true;
         }
     }
 
@@ -220,11 +233,11 @@ public class PlayerRangedAttack : MonoBehaviour
     {
         if(canReload)
         {
-            if (shotsLeft == 6) return;
+            if (shotsLeft == maxShotsLeft) return;
 
             if (reloadTimer >= timeToReload)
             {
-                shotsLeft++;
+                shotsLeft = maxShotsLeft;
                 reloadTimer = 0.0f;
             }
             else

@@ -50,6 +50,7 @@ public class EnemyRangedAttack : MonoBehaviour, IEnemyAttack
         var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         projectile.SetProjectileDirection(projectileDirection.normalized);
         projectile.SetCreatorCollider(myCollider);
+        projectile.SetDamageTarget(false);
     }
 
     void Update()
