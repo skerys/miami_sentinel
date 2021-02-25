@@ -37,7 +37,7 @@ public class Projectile : MonoBehaviour
     {
         creatorCollider = creator;
     }
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other == creatorCollider) return;
