@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyHealth : HealthSystem
 {
     private BaseEnemy baseEnemy;
+    [SerializeField] private bool killable = true;
 
     protected override void Awake()
     {
@@ -14,7 +15,7 @@ public class EnemyHealth : HealthSystem
 
     public override void Kill()
     {
-        Debug.Log(baseEnemy.OriginFactory);
+        if(!killable) return;
         if (baseEnemy.OriginFactory != null)
         {
             baseEnemy.OriginFactory.Reclaim(baseEnemy);

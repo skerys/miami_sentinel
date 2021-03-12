@@ -14,9 +14,7 @@ public class PlayerRangedAttack : MonoBehaviour
     private LayerMask wallLayerMask = default;
 
     [Header("Reloading")]
-    [SerializeField] private float timeToReload = 0.5f;
-    [SerializeField, Range(0.0f, 1.0f)] private float speedModifierOnReload = 0.5f;
-    [SerializeField] private int maxShotsLeft = 6;
+    [SerializeField] private int maxShotsLeft = 9999;
 
     [Header("Effects")]
     [SerializeField]
@@ -41,36 +39,35 @@ public class PlayerRangedAttack : MonoBehaviour
 
     [Space]
     [SerializeField]
-    private int bounceLimit = 3;
+    private int bounceLimit = 5;
     [SerializeField]
     private float timeToCharge = 0.5f;
     [SerializeField]
-    private float sphereCastRadius = 0.3f;
+    private float initialSpherecastRadius = 0.01f;
+    [SerializeField]
+    private float afterBounceHelpAngle = 10f;
 
     private float chargeTimer= 0.0f;
     private bool chargeEffectStarted = false;
     private bool isPiercing = false;
 
-    private float reloadTimer = 0.0f;
-    private bool alreadyReloading = false;
+
 
     private PlayerInput input;
     private BodyMovement bodyMovement;
     private PlayerDash dash;
 
     private RaycastHit[] rangedHits = new RaycastHit[20];
-    private int shotsLeft = 6;
+    private int shotsLeft = 9999;
 
-    [HideInInspector]
-    public bool canReload = true;
 
     private LayerMask rayMask;
     private bool hasBounced = false;
-    private bool wallBounce;
-
     private RaycastHitAscendingDistanceComparer comparer;
 
     Ray nextRay;
+
+    public bool helperOnDebug = false;
 
     void Awake()
     {
@@ -78,7 +75,7 @@ public class PlayerRangedAttack : MonoBehaviour
         bodyMovement = GetComponent<BodyMovement>();
         dash = GetComponent<PlayerDash>();
 
-        rayMask = enemyLayerMask | shieldLayerMask | wallLayerMask;
+        rayMask = shieldLayerMask | wallLayerMask;
         comparer = new RaycastHitAscendingDistanceComparer();
     }
 
@@ -118,8 +115,9 @@ public class PlayerRangedAttack : MonoBehaviour
     void BounceShot(RaycastHit hit, ref List<Vector3> linePositions)
     {
         Vector3 newDir = Vector3.Reflect(nextRay.direction, hit.normal);
+
         nextRay.origin = hit.point;
-        nextRay.direction = newDir;
+        nextRay.direction = newDir.normalized;
         hasBounced = true;
 
         linePositions.Add(hit.point);
@@ -129,164 +127,154 @@ public class PlayerRangedAttack : MonoBehaviour
 
     void DoRangedAttack()
     {
-        if (shotsLeft > 0)
+        if(shotsLeft <= 0) return;
+
+        List<Vector3> linePositionsInitial = new List<Vector3>();
+        List<Vector3> linePositionsBounced = new List<Vector3>();
+
+        linePositionsInitial.Add(transform.position);
+
+        nextRay.origin = transform.position;
+        nextRay.direction = (input.LookAtPos - transform.position).normalized;
+
+        int rangedHitCount;
+        bool wallBounce = isPiercing;
+
+        float coneDot = Mathf.Cos(afterBounceHelpAngle * Mathf.Deg2Rad);
+        float helpAngle = afterBounceHelpAngle * Mathf.Deg2Rad;
+
+        for(int i = 0; i < bounceLimit; i++)
         {
-            List<Vector3> linePositions = new List<Vector3>();
-            linePositions.Add(transform.position);
-
-            nextRay.origin = transform.position;
-            nextRay.direction = input.LookAtPos - transform.position;
-
-            float trauma = isPiercing ? screenShakeTraumaPerPiercingShot : screenShakeTraumaPerShot;
-            screenShake.AddTrauma(trauma);
-
-            int bounces = 0;
-            int rangedHitCount = 0;
-            //Only bounce off wall when shot is charged
-            wallBounce = isPiercing;
-
-            while(bounces < bounceLimit)
-            {
-                if(isPiercing)
-                {
-                    rangedHitCount = Physics.SphereCastNonAlloc(nextRay, sphereCastRadius, rangedHits, Mathf.Infinity, rayMask);
-                    if (rangedHitCount == 0) { break; }
-
-                    Array.Sort(rangedHits, 0, rangedHitCount, comparer);
-                }
-                else
-                {
-                    Array.Clear(rangedHits, 0, rangedHits.Length);
-                    rangedHitCount = Physics.SphereCast(nextRay, sphereCastRadius, out rangedHits[0], Mathf.Infinity, rayMask) ? 1 : 0;
-                    if (rangedHitCount == 0) { break; }
-                }
-                
-
-                for (int i = 0; i < rangedHitCount; ++i)
-                {
-                    if (shieldLayerMask == (shieldLayerMask | (1 << rangedHits[i].collider.gameObject.layer)))
-                    {
-                        bounces++;
-                        BounceShot(rangedHits[i], ref linePositions);
-                        break;
-                    }
-                    else if( (wallLayerMask == (wallLayerMask | (1 << rangedHits[i].collider.gameObject.layer))) )
-                    {
-                        if(wallBounce)
-                        {
-                            bounces++;
-                            wallBounce = false;
-                            BounceShot(rangedHits[i], ref linePositions);
-                        }
-                        else
-                        {
-                            linePositions.Add(rangedHits[i].point);
-                            var hitEffectObj = Instantiate(hitEffect, rangedHits[i].point, Quaternion.identity);
-                            hitEffectObj.transform.LookAt(rangedHits[i].point + rangedHits[i].normal);
-                            hasBounced = false;
-                        }
-                        break;
-                    }
-                    else
-                    {
-                        hasBounced = false;
-                    }
-
-                    var health = rangedHits[i].collider.GetComponent<HealthSystem>();
-                    if (health)
-                    {
-                        health.Kill();
-                        var hitEffectObj = Instantiate(hitEffect, rangedHits[i].point, Quaternion.identity);
-                        hitEffectObj.transform.LookAt(rangedHits[i].point + rangedHits[i].normal);
-                        if (!isPiercing)
-                        {
-                            linePositions.Add(rangedHits[i].point);
-                        }
-                    }
-                }
-
-                if (!hasBounced) break;
+            bool firstRay = i == 0;
             
-            }
-            var bulletTrail = isPiercing ? Instantiate(bulletTrailPrefabPiercing) : Instantiate(bulletTrailPrefab);
-            bulletTrail.SetTransform(transform);
+            var linePositions = firstRay ? linePositionsInitial : linePositionsBounced;
+            rangedHitCount = 0;
 
-            //Do hitstop if an enemy was hit
-            if(rangedHitCount > 0)
+            RaycastHit finalHit;
+            //Shoot simple ray and check for walls/shields
+            rangedHitCount = Physics.Raycast(nextRay, out finalHit, Mathf.Infinity, rayMask) ? 1 : 0;
+            Debug.Log(i + " : " + rangedHitCount);
+            Debug.Log(finalHit.point);
+            
+            //If it is a bounced shot, do the cone check and realign based on the least different angle enemy found
+            if(!firstRay && helperOnDebug)
             {
-                HitStopManager.Instance.HitStop(hitStopAmount);
+                //Calculate optimal spehere Cast radius
+                float hitToSurfaceAngle = (90f + Vector3.Angle(finalHit.normal, -nextRay.direction)) * Mathf.Deg2Rad;
+                float maxDistanceToSurface = finalHit.distance * Mathf.Sin(hitToSurfaceAngle) / Mathf.Sin(Mathf.PI - hitToSurfaceAngle - helpAngle);
+                float sphereCastRadius = maxDistanceToSurface * Mathf.Sin(helpAngle) / Mathf.Sin(Mathf.PI / 2f - helpAngle);
+
+                //Backtrack ray origin by radius to hit avoid enemies being inside the initial sphere
+                Debug.Log(nextRay.origin.ToString() + nextRay.direction.ToString() + sphereCastRadius.ToString());
+                rangedHitCount = Physics.SphereCastNonAlloc(nextRay.origin - nextRay.direction * sphereCastRadius * 2f, sphereCastRadius, nextRay.direction, rangedHits, Mathf.Infinity, enemyLayerMask);
+
+                //For each enemy, check if theyre actually in the cone by comparing dot product
+                float bestCaseAngle = -1f;
+                for(int j = 0; j < rangedHitCount; j++)
+                {
+                    Debug.Log("enemy hit on: " + rangedHits[j].collider.gameObject.name);
+                    var dirToEnemy = (rangedHits[j].point - nextRay.origin).normalized;
+                    var enemyDot = Vector3.Dot(nextRay.direction, dirToEnemy);
+                    if(!firstRay && enemyDot < coneDot)
+                    {
+                        //Enemy is not within the cone
+                        continue;
+                    }
+                    if(enemyDot > bestCaseAngle)
+                    {
+                        bestCaseAngle = enemyDot;
+                        nextRay.direction = dirToEnemy;
+                    }
+                }
+                //New final hit
+                if(bestCaseAngle > -1f) rangedHitCount = Physics.Raycast(nextRay, out finalHit, Mathf.Infinity, rayMask) ? 1 : 0;
             }
 
-            bulletTrail.SetPositions(linePositions.ToArray());
-            shotsLeft--;
-
-            isPiercing = false;
-            chargeTimer = 0.0f;
-            chargeEffectStarted = false;
-            chargeEffect.SetActive(false);
-            aimingEffect.SetActive(false);
-            wallBounce = true;
-        }
-    }
-
-    void ReloadUpdate()
-    {
-        if(canReload)
-        {
-            if (shotsLeft == maxShotsLeft) return;
-
-            if (reloadTimer >= timeToReload)
+            //Sphere cast for enemiessa
+            if(isPiercing)
             {
-                shotsLeft = maxShotsLeft;
-                reloadTimer = 0.0f;
+                rangedHitCount = Physics.SphereCastNonAlloc(nextRay, initialSpherecastRadius, rangedHits, finalHit.distance, enemyLayerMask);
+            }
+            else
+            {           
+                rangedHitCount = Physics.SphereCast(nextRay, initialSpherecastRadius, out rangedHits[0], finalHit.distance, enemyLayerMask) ? 1 : 0; 
+            }
+
+            //For each enemy, reduce health
+            for(int j = 0; j < rangedHitCount; j++)
+            {
+                var health = rangedHits[j].collider.GetComponent<HealthSystem>();
+                if (!firstRay && health)
+                {
+                    health.Kill();
+                    if(!isPiercing) finalHit = rangedHits[j];
+
+                    var hitEffectObj = Instantiate(hitEffect, rangedHits[j].point, Quaternion.identity);
+                    hitEffectObj.transform.LookAt(rangedHits[j].point + rangedHits[j].normal);
+                }
+            }
+            //Do bounce if needed
+            Debug.Log(finalHit.point);
+            if (shieldLayerMask == (shieldLayerMask | (1 << finalHit.collider.gameObject.layer)))
+            {
+                BounceShot(finalHit, ref linePositions);
+            }
+            else if(wallBounce && (wallLayerMask == (wallLayerMask | (1 << finalHit.collider.gameObject.layer))) )
+            { 
+                wallBounce = false;
+                BounceShot(finalHit, ref linePositions);   
             }
             else
             {
-                //Currently reloading
-                reloadTimer += Time.deltaTime;
-                if (!alreadyReloading)
-                {
-                    //Started reloading
-                    bodyMovement.ModifySpeed(speedModifierOnReload);
-                    alreadyReloading = true;
-
-                    dash.canDash = false;
-                }
+                linePositions.Add(finalHit.point);
+                var hitEffectObj = Instantiate(hitEffect, finalHit.point, Quaternion.identity);
+                hitEffectObj.transform.LookAt(finalHit.point + finalHit.normal);
+                hasBounced = false;
             }
+
+            if(!hasBounced) break;
         }
+
+        //Populate effect data
+        var bulletTrail = isPiercing ? Instantiate(bulletTrailPrefabPiercing) : Instantiate(bulletTrailPrefab);
+        bulletTrail.SetTransform(transform);
+        linePositionsBounced.Insert(0, linePositionsInitial[linePositionsInitial.Count - 1]);
+        bulletTrail.SetPositionsInitial(linePositionsInitial.ToArray());
+        bulletTrail.SetPositionsAfterBounce(linePositionsBounced.ToArray());
+
+        //Screenshake
+        float trauma = isPiercing ? screenShakeTraumaPerPiercingShot : screenShakeTraumaPerShot;
+        screenShake.AddTrauma(trauma);
+
+        //Hitstop
+
+        //Decrease ammo and reset effects/charging
+        shotsLeft--;
+        isPiercing = false;
+        chargeTimer = 0.0f;
+        chargeEffectStarted = false;
+        chargeEffect.SetActive(false);
+        aimingEffect.SetActive(false);
     }
-
-    public void ReloadEnd()
-    {
-        reloadTimer = 0.0f;
-        if (alreadyReloading)
-        {
-            bodyMovement.ModifySpeed(1.0f / speedModifierOnReload);
-        }
-        alreadyReloading = false;
-
-        dash.canDash = true;
-    }
-
+    
     void OnEnable()
     {
         input.OnRangedAttack += ChargeRangedAttack;
         input.OnRangedAttackRelease += DoRangedAttack;
-        input.OnReload += ReloadUpdate;
-        input.OnReleaseReload += ReloadEnd;
     }
 
     void OnDisable()
     {
         input.OnRangedAttack -= ChargeRangedAttack;
         input.OnRangedAttackRelease -= DoRangedAttack;
-        input.OnReload -= ReloadUpdate;
-        input.OnReleaseReload -= ReloadEnd;
     }
 
     public int GetBulletCount() { return shotsLeft; }
-    public float GetReloadProgress() { return reloadTimer; }
-    public float GetReloadTime() { return timeToReload; }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.P)) helperOnDebug = !helperOnDebug;
+    }
 
 }
 

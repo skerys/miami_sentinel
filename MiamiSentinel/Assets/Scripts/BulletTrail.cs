@@ -7,21 +7,30 @@ public class BulletTrail : MonoBehaviour
     [SerializeField]
     private float lifetime;
     [SerializeField]
-    private float testLifetime;
+    private float destroyLifetime;
 
-    private LineRenderer lineRenderer;
+    [SerializeField]
+    private LineRenderer lineRendererInitial;
+    [SerializeField]
+    private LineRenderer lineRendererAfterBounce;
+
     private float currentLifeTimer;
     public void OnEnable()
     {
         currentLifeTimer = lifetime;
-        lineRenderer = GetComponent<LineRenderer>();
-        Destroy(gameObject, testLifetime);
+        Destroy(gameObject, destroyLifetime);
     }
 
-    public void SetPositions(Vector3[] positions)
+    public void SetPositionsInitial(Vector3[] positions)
     {
-        lineRenderer.positionCount = positions.Length;
-        lineRenderer.SetPositions(positions);
+        lineRendererInitial.positionCount = positions.Length;
+        lineRendererInitial.SetPositions(positions);
+    }
+
+    public void SetPositionsAfterBounce(Vector3[] positions)
+    {
+        lineRendererAfterBounce.positionCount = positions.Length;
+        lineRendererAfterBounce.SetPositions(positions);
     }
 
     public void SetTransform(Transform copyTransform)
@@ -32,14 +41,19 @@ public class BulletTrail : MonoBehaviour
 
     public void Update()
     {
-        lineRenderer.startColor = new Color(lineRenderer.startColor.r, lineRenderer.startColor.g, lineRenderer.startColor.b, currentLifeTimer / lifetime);
-        lineRenderer.endColor = new Color(lineRenderer.startColor.r, lineRenderer.startColor.g, lineRenderer.startColor.b, currentLifeTimer / lifetime);
+        lineRendererInitial.startColor = new Color(lineRendererInitial.startColor.r, lineRendererInitial.startColor.g, lineRendererInitial.startColor.b, currentLifeTimer / lifetime);
+        lineRendererInitial.endColor = new Color(lineRendererInitial.startColor.r, lineRendererInitial.startColor.g, lineRendererInitial.startColor.b, currentLifeTimer / lifetime);
+
+        lineRendererAfterBounce.startColor = new Color(lineRendererAfterBounce.startColor.r, lineRendererAfterBounce.startColor.g, lineRendererAfterBounce.startColor.b, currentLifeTimer / lifetime);
+        lineRendererAfterBounce.endColor = new Color(lineRendererAfterBounce.startColor.r, lineRendererAfterBounce.startColor.g, lineRendererAfterBounce.startColor.b, currentLifeTimer / lifetime);
+
         currentLifeTimer -= Time.deltaTime;
 
         if(currentLifeTimer <= 0.0f)
         {
             //Temporary (until object pooling is done)
-            lineRenderer.enabled = false;
+            lineRendererInitial.enabled = false;
+            lineRendererAfterBounce.enabled = false;
         }
     }
 }

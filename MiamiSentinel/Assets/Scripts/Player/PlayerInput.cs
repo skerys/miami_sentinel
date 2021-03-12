@@ -8,8 +8,6 @@ public class PlayerInput : MonoBehaviour, IMovementInput
     [SerializeField]
     private KeyCode dashKey;
     [SerializeField]
-    private KeyCode reloadKey;
-    [SerializeField]
     private Camera mainCam;
     [SerializeField]
     private LayerMask mouseCollisionLayerMask;
@@ -23,9 +21,6 @@ public class PlayerInput : MonoBehaviour, IMovementInput
 
     public event Action OnRangedAttack = delegate { };
     public event Action OnRangedAttackRelease = delegate { };
-
-    public event Action OnReload = delegate { };
-    public event Action OnReleaseReload = delegate { };
 
     public event Action OnDash = delegate { };
 
@@ -65,15 +60,6 @@ public class PlayerInput : MonoBehaviour, IMovementInput
             if (Input.GetMouseButtonUp(1))
             {
                 OnRangedAttackRelease();
-            }
-
-            if (Input.GetKey(reloadKey))
-            {
-                OnReload();
-            }
-            if (Input.GetKeyUp(reloadKey))
-            {
-                OnReleaseReload();
             }
         }
     }
